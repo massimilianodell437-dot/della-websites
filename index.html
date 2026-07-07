@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Della Websites — Siti che portano clienti, non solo visite</title>
+<meta name="description" content="Progettiamo siti per attività locali pensati per generare contatti reali: chiamate, prenotazioni, richieste. Guarda il progetto dimostrativo.">
+<meta name="theme-color" content="#0d0b0e">
+
+<!-- Open Graph (WhatsApp, Facebook, LinkedIn preview) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Della Websites — Siti che portano clienti, non solo visite">
+<meta property="og:description" content="Progettiamo siti per attività locali pensati per generare contatti reali: chiamate, prenotazioni, richieste.">
+<meta property="og:image" content="assets/og-image.jpg">
+<!-- TODO: replace with real domain once deployed, e.g. https://dellawebsites.vercel.app -->
+<meta property="og:url" content="https://TODO-your-domain-here">
+
+<!-- Twitter/X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Della Websites — Siti che portano clienti, non solo visite">
+<meta name="twitter:description" content="Progettiamo siti per attività locali pensati per generare contatti reali.">
+<meta name="twitter:image" content="assets/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Piazzolla:ital,opsz,wght@0,8..30,400;0,8..30,500;0,8..30,600;0,8..30,700;1,8..30,500;1,8..30,600&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="progress-bar"><span id="progressFill"></span></div>
+
+<header class="navbar" id="navbar">
+  <div class="nav-inner container">
+    <a class="logo" href="#top">Della<span class="dot">.</span></a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#problema" data-nav>Il problema</a>
+      <a href="#servizi" data-nav>Servizi</a>
+      <a href="#come-funziona" data-nav>Come funziona</a>
+      <a href="#progetti" data-nav>Progetti</a>
+      <a href="#contatti" data-nav>Contatti</a>
+    </nav>
+
+    <a class="nav-cta" href="#" id="navWhatsapp" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path><path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.763.462 3.483 1.34 4.997L2 22l5.13-1.325a9.958 9.958 0 0 0 4.874 1.242h.004c5.514 0 9.997-4.483 9.997-9.997 0-2.671-1.04-5.182-2.929-7.071A9.937 9.937 0 0 0 12.004 2.003zm0 18.19h-.003a8.196 8.196 0 0 1-4.175-1.144l-.3-.178-3.043.787.812-2.968-.195-.305a8.184 8.184 0 0 1-1.256-4.376c0-4.523 3.68-8.203 8.204-8.203a8.15 8.15 0 0 1 5.8 2.406 8.15 8.15 0 0 1 2.398 5.802c-.001 4.524-3.681 8.203-8.242 8.203z"></path></svg>
+      <span>WhatsApp</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Apri il menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-glow hero-glow--teal"></div>
+    <div class="hero-glow hero-glow--amber"></div>
+    <div class="hero-grid"></div>
+  </div>
+
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow" data-hero-el>Siti web per attività locali a Torino &amp; Benevento</p>
+
+      <h1 class="hero-title">
+        <span class="line-mask"><span class="line" data-hero-line>Sito nuovo,</span></span>
+        <span class="line-mask"><span class="line line--accent" data-hero-line>clienti nuovi.</span></span>
+      </h1>
+
+      <p class="hero-sub" data-hero-el>
+        Progettiamo siti veloci, moderni e pensati per convertire. Non un altro sito "carino":
+        uno strumento che porta clienti veri alla tua attività, dal primo giorno online.
+      </p>
+
+      <div class="hero-actions" data-hero-el>
+        <a class="btn btn-primary" href="#" id="whatsappHero" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path><path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.763.462 3.483 1.34 4.997L2 22l5.13-1.325a9.958 9.958 0 0 0 4.874 1.242h.004c5.514 0 9.997-4.483 9.997-9.997 0-2.671-1.04-5.182-2.929-7.071A9.937 9.937 0 0 0 12.004 2.003zm0 18.19h-.003a8.196 8.196 0 0 1-4.175-1.144l-.3-.178-3.043.787.812-2.968-.195-.305a8.184 8.184 0 0 1-1.256-4.376c0-4.523 3.68-8.203 8.204-8.203a8.15 8.15 0 0 1 5.8 2.406 8.15 8.15 0 0 1 2.398 5.802c-.001 4.524-3.681 8.203-8.242 8.203z"></path></svg>
+          Scrivici su WhatsApp
+        </a>
+        <a class="btn btn-ghost" href="#progetti">
+          Guarda i progetti
+          <span class="btn-arrow">↓</span>
+        </a>
+      </div>
+
+      <div class="hero-meta" data-hero-el>
+        <span>Online in 7 giorni</span>
+        <span class="dot-sep">•</span>
+        <span>Torino &amp; Benevento</span>
+        <span class="dot-sep">•</span>
+        <span>Assistenza inclusa</span>
+      </div>
+    </div>
+
+    <div class="hero-visual" data-hero-el>
+      <div class="mockup-wrap" id="mockupWrap">
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">personaltrainer-benevento.it</div>
+          </div>
+          <div class="mockup-body mockup-body--pt">
+            <div class="mockup-nav">
+              <span class="mockup-logo">MARCO<em>FIT</em></span>
+              <span class="mockup-navlink">Percorsi</span>
+              <span class="mockup-navlink">Risultati</span>
+              <span class="mockup-navbtn">Prenota</span>
+            </div>
+            <div class="mockup-hero">
+              <div class="mockup-portrait" aria-hidden="true">
+                <div class="portrait-shape shape-1"></div>
+                <div class="portrait-shape shape-2"></div>
+                <div class="portrait-shape shape-3"></div>
+              </div>
+              <div class="mockup-hero-text">
+                <span class="mockup-kicker">Personal Trainer · Benevento</span>
+                <span class="mockup-h1">Trasforma<br>il tuo corpo.</span>
+                <span class="mockup-p">Percorsi 1-to-1, prova gratuita inclusa.</span>
+                <span class="mockup-cta">Prenota la prova gratuita →</span>
+              </div>
+            </div>
+            <div class="mockup-stats">
+              <div><b>120+</b><small>clienti seguiti</small></div>
+              <div><b>4.9★</b><small>recensioni</small></div>
+              <div><b>7gg</b><small>online in</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-reflection" aria-hidden="true"></div>
+      </div>
+
+      <div class="floating-badge badge-1" data-hero-el>
+        <span class="badge-num">+64%</span>
+        <span class="badge-label">richieste stimate</span>
+      </div>
+      <div class="floating-badge badge-2" data-hero-el>
+        <span class="badge-dot"></span>
+        <span class="badge-label">Progetto dimostrativo</span>
+      </div>
+    </div>
+  </div>
+
+  <a href="#problema" class="scroll-cue" aria-label="Scorri per continuare">
+    <span>Scorri</span>
+    <span class="scroll-cue-line"></span>
+  </a>
+</section>
+
+<!-- ============ PROBLEMA ============ -->
+<section class="problem" id="problema">
+  <div class="container">
+    <p class="eyebrow reveal">Il problema</p>
+    <h2 class="section-title reveal">
+      La maggior parte delle attività locali <em>perde clienti</em><br class="br-desktop">
+      prima ancora di aprire la porta.
+    </h2>
+
+    <div class="problem-grid">
+      <div class="problem-stat reveal">
+        <span class="stat-num">53<small>%</small></span>
+        <p>degli utenti abbandona un sito se non si carica entro 3 secondi.</p>
+      </div>
+      <div class="problem-stat reveal">
+        <span class="stat-num">88<small>%</small></span>
+        <p>non torna più su un sito dopo una brutta prima esperienza mobile.</p>
+      </div>
+      <div class="problem-stat reveal">
+        <span class="stat-num">1<small>°</small></span>
+        <p>posto: dove i clienti ti cercano prima ancora di chiamarti. Google, non il passaparola.</p>
+      </div>
+    </div>
+
+    <div class="problem-causes">
+      <div class="cause-card reveal">
+        <h3>Sito lento</h3>
+        <p>Vecchie piattaforme, plugin inutili, immagini pesanti. Il cliente chiude la scheda prima di leggere chi sei.</p>
+      </div>
+      <div class="cause-card reveal">
+        <h3>Sito vecchio</h3>
+        <p>Design fermo al 2015, non responsive, testi illeggibili da telefono. Zero fiducia, zero contatti.</p>
+      </div>
+      <div class="cause-card reveal">
+        <h3>Nessun sito</h3>
+        <p>Solo social o niente. Chi cerca la tua attività su Google trova i concorrenti, non te.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVIZI ============ -->
+<section class="services" id="servizi">
+  <div class="container">
+    <p class="eyebrow reveal">Servizi</p>
+    <h2 class="section-title reveal">Tre modi per iniziare,<br class="br-desktop"> un solo obiettivo: <em>più clienti.</em></h2>
+
+    <div class="services-grid">
+
+      <div class="plan-card reveal">
+        <div class="plan-head">
+          <h3>Setup Base</h3>
+          <p>Per chi vuole partire subito, senza complicazioni.</p>
+        </div>
+        <div class="plan-price"><span class="price-from">da</span> €490</div>
+        <ul class="plan-features">
+          <li>Sito one-page su misura</li>
+          <li>Design responsive mobile-first</li>
+          <li>Pulsante WhatsApp integrato</li>
+          <li>SEO di base &amp; Google Maps</li>
+          <li>Consegna in 7 giorni lavorativi</li>
+        </ul>
+        <a href="#contatti" class="btn btn-outline">Inizia da qui</a>
+      </div>
+
+      <div class="plan-card plan-card--featured reveal">
+        <span class="plan-badge">Il più scelto</span>
+        <div class="plan-head">
+          <h3>Standard</h3>
+          <p>Il pacchetto completo per una presenza online che vende.</p>
+        </div>
+        <div class="plan-price"><span class="price-from">da</span> €890</div>
+        <ul class="plan-features">
+          <li>Tutto il piano Base</li>
+          <li>Copywriting persuasivo su misura</li>
+          <li>Animazioni e motion premium</li>
+          <li>Sezione recensioni &amp; portfolio</li>
+          <li>Form di contatto + integrazione WhatsApp</li>
+          <li>Ottimizzazione velocità avanzata</li>
+        </ul>
+        <a href="#contatti" class="btn btn-primary">Scegli Standard</a>
+      </div>
+
+      <div class="plan-card reveal">
+        <div class="plan-head">
+          <h3>Gestione Mensile</h3>
+          <p>Il sito cresce con te. Ci pensiamo noi, ogni mese.</p>
+        </div>
+        <div class="plan-price"><span class="price-from">da</span> €90<small>/mese</small></div>
+        <ul class="plan-features">
+          <li>Aggiornamenti contenuti inclusi</li>
+          <li>Hosting, dominio &amp; sicurezza gestiti</li>
+          <li>Monitoraggio prestazioni</li>
+          <li>Piccole modifiche illimitate</li>
+          <li>Supporto prioritario via WhatsApp</li>
+        </ul>
+        <a href="#contatti" class="btn btn-outline">Parliamone</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ COME FUNZIONA ============ -->
+<section class="process" id="come-funziona">
+  <div class="container">
+    <p class="eyebrow reveal">Come funziona</p>
+    <h2 class="section-title reveal">Facile e veloce, <em>come dovrebbe essere.</em></h2>
+
+    <div class="process-grid">
+      <div class="process-step reveal">
+        <span class="process-num">Primo</span>
+        <h3>Chiacchierata conoscitiva</h3>
+        <p>15 minuti su WhatsApp o al telefono. Ci racconti la tua attività, capiamo cosa ti serve davvero.</p>
+      </div>
+      <div class="process-connector reveal" aria-hidden="true"></div>
+      <div class="process-step reveal">
+        <span class="process-num">Secondo</span>
+        <h3>Design &amp; sviluppo</h3>
+        <p>Costruiamo il tuo sito su misura: testi, immagini, struttura. Tu approvi, noi perfezioniamo.</p>
+      </div>
+      <div class="process-connector reveal" aria-hidden="true"></div>
+      <div class="process-step reveal">
+        <span class="process-num">Terzo</span>
+        <h3>Online &amp; assistenza</h3>
+        <p>Il sito va live in 7 giorni. Restiamo al tuo fianco per aggiornamenti e supporto continuo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PORTFOLIO / DEMO ============ -->
+<section class="portfolio" id="progetti">
+  <div class="container">
+    <p class="eyebrow reveal">Progetti dimostrativi</p>
+    <h2 class="section-title reveal">Non promesse. <em>Progetti veri</em>,<br class="br-desktop"> pensati per vendere.</h2>
+    <p class="portfolio-note reveal">I due casi studio qui sotto sono progetti dimostrativi, creati per mostrare qualità e stile del nostro lavoro.</p>
+
+    <div class="case-studies">
+
+      <article class="case-study reveal">
+        <div class="case-visual">
+          <div class="mockup-frame mockup-frame--case">
+            <div class="mockup-chrome">
+              <div class="mockup-dots"><span></span><span></span><span></span></div>
+              <div class="mockup-url">personaltrainer-benevento.it</div>
+            </div>
+            <div class="mockup-body mockup-body--pt mockup-body--small">
+              <div class="mockup-nav">
+                <span class="mockup-logo">MARCO<em>FIT</em></span>
+                <span class="mockup-navbtn">Prenota</span>
+              </div>
+              <div class="mockup-hero mockup-hero--small">
+                <div class="mockup-portrait" aria-hidden="true">
+                  <div class="portrait-shape shape-1"></div>
+                  <div class="portrait-shape shape-2"></div>
+                </div>
+                <div class="mockup-hero-text">
+                  <span class="mockup-kicker">Personal Trainer</span>
+                  <span class="mockup-h1">Trasforma<br>il tuo corpo.</span>
+                  <span class="mockup-cta">Prenota →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case-copy">
+          <span class="case-tag">Demo · Progetto dimostrativo</span>
+          <h3>Personal Trainer <em>Benevento</em></h3>
+          <p>Obiettivo: trasformare visite social in prove gratuite prenotate. Sito one-page con CTA diretta a WhatsApp, prova sociale e percorso chiaro in tre scroll.</p>
+          <ul class="case-tags">
+            <li>One-page</li>
+            <li>Prenotazioni WhatsApp</li>
+            <li>Mobile-first</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="case-study case-study--reverse reveal">
+        <div class="case-visual">
+          <div class="mockup-frame mockup-frame--case">
+            <div class="mockup-chrome">
+              <div class="mockup-dots"><span></span><span></span><span></span></div>
+              <div class="mockup-url">palestratorino.it</div>
+            </div>
+            <div class="mockup-body mockup-body--gym mockup-body--small">
+              <div class="mockup-nav">
+                <span class="mockup-logo">FORZA<em>TO</em></span>
+                <span class="mockup-navbtn">Iscriviti</span>
+              </div>
+              <div class="mockup-hero mockup-hero--small">
+                <div class="mockup-portrait mockup-portrait--gym" aria-hidden="true">
+                  <div class="portrait-shape shape-1"></div>
+                  <div class="portrait-shape shape-2"></div>
+                </div>
+                <div class="mockup-hero-text">
+                  <span class="mockup-kicker">Palestra · Torino</span>
+                  <span class="mockup-h1">Allenati come<br>nessun altro.</span>
+                  <span class="mockup-cta">Prova gratuita →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case-copy">
+          <span class="case-tag">Demo · Progetto dimostrativo</span>
+          <h3>Palestra <em>Torino</em></h3>
+          <p>Obiettivo: comunicare energia e serietà insieme. Layout più strutturato per orari, corsi e abbonamenti, con un'unica call to action sempre visibile.</p>
+          <ul class="case-tags">
+            <li>Presentazione corsi</li>
+            <li>Iscrizioni online</li>
+            <li>Identità forte</li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTATTI ============ -->
+<section class="contact" id="contatti">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-copy reveal">
+        <p class="eyebrow">Contatti</p>
+        <h2 class="section-title">Parliamone. <em>Ci vogliono<br class="br-desktop"> 15 minuti</em>, non 15 giorni.</h2>
+        <p class="contact-sub">
+          Raccontaci la tua attività: scriviamo insieme il sito che ti porta clienti nuovi, senza sorprese e senza tecnicismi.
+        </p>
+
+        <div class="contact-actions">
+          <a href="#" id="whatsappContact" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path><path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.763.462 3.483 1.34 4.997L2 22l5.13-1.325a9.958 9.958 0 0 0 4.874 1.242h.004c5.514 0 9.997-4.483 9.997-9.997 0-2.671-1.04-5.182-2.929-7.071A9.937 9.937 0 0 0 12.004 2.003zm0 18.19h-.003a8.196 8.196 0 0 1-4.175-1.144l-.3-.178-3.043.787.812-2.968-.195-.305a8.184 8.184 0 0 1-1.256-4.376c0-4.523 3.68-8.203 8.204-8.203a8.15 8.15 0 0 1 5.8 2.406 8.15 8.15 0 0 1 2.398 5.802c-.001 4.524-3.681 8.203-8.242 8.203z"></path></svg>
+            Scrivici su WhatsApp
+          </a>
+          <a href="mailto:massimilianodellapia07@gmail.com" class="btn btn-ghost btn-lg">
+            massimilianodellapia07@gmail.com
+          </a>
+        </div>
+
+        <p class="contact-hint">Oppure lascia i tuoi dati: ti contattiamo noi su WhatsApp.</p>
+      </div>
+
+      <form class="contact-form reveal" id="contactForm">
+        <div class="form-row">
+          <label for="fname">Nome</label>
+          <input type="text" id="fname" name="fname" placeholder="Il tuo nome" required>
+        </div>
+        <div class="form-row">
+          <label for="fbiz">Attività</label>
+          <input type="text" id="fbiz" name="fbiz" placeholder="Es. Personal Trainer, Ristorante..." required>
+        </div>
+        <div class="form-row">
+          <label for="fcity">Città</label>
+          <select id="fcity" name="fcity" required>
+            <option value="" disabled selected>Seleziona</option>
+            <option value="Torino">Torino</option>
+            <option value="Benevento">Benevento</option>
+            <option value="Altra">Altra città</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="fmsg">Messaggio</label>
+          <textarea id="fmsg" name="fmsg" rows="3" placeholder="Raccontaci in breve cosa ti serve"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          Invia su WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a class="logo" href="#top">Della<span class="dot">.</span></a>
+    <p>© 2026 Della Websites. Siti web per attività locali a Torino &amp; Benevento.</p>
+    <div class="footer-links">
+      <a href="#servizi">Servizi</a>
+      <a href="#progetti">Progetti</a>
+      <a href="#contatti">Contatti</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.16/dist/lenis.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

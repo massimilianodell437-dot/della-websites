@@ -55,6 +55,8 @@ onScroll();
 const sections = document.querySelectorAll('main section[id]');
 const navAnchors = document.querySelectorAll('[data-nav]');
 
+let lastActiveSectionId = null;
+
 const sectionObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
@@ -62,6 +64,14 @@ const sectionObserver = new IntersectionObserver((entries) => {
     navAnchors.forEach(a => {
       a.classList.toggle('is-active', a.getAttribute('href') === `#${id}`);
     });
+
+    if (id !== lastActiveSectionId) {
+      lastActiveSectionId = id;
+      progressFill.classList.remove('is-pulsing');
+      // eslint-disable-next-line no-unused-expressions
+      progressFill.offsetWidth; // force reflow so the animation restarts
+      progressFill.classList.add('is-pulsing');
+    }
   });
 }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
 
@@ -86,9 +96,19 @@ contactForm.addEventListener('submit', (e) => {
 });
 
 /* ---------------------------------------------------------------
-   GSAP / ScrollTrigger / Lenis
+   GSAP / ScrollTrigger / CustomEase / Lenis
+
+   Named motion system — every GSAP tween below uses one of these
+   three, matching the exact CSS cubic-bezier curves 1:1 (no drift
+   between CSS-driven and JS-driven motion):
+   - easeReveal (0.16,1,0.3,1): scroll reveals, page-load elements
+   - easeHover (0.65,0,0.35,1): hover/interaction states
+   - easeTransition (0.83,0,0.17,1): page/section transitions
    --------------------------------------------------------------- */
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
+CustomEase.create('easeReveal', '0.16, 1, 0.3, 1');
+CustomEase.create('easeHover', '0.65, 0, 0.35, 1');
+CustomEase.create('easeTransition', '0.83, 0, 0.17, 1');
 
 if (!prefersReducedMotion) {
   const lenis = new Lenis({
@@ -105,21 +125,39 @@ if (!prefersReducedMotion) {
   gsap.ticker.lagSmoothing(0);
 }
 
-/* Hero intro timeline
+/* Page-load signature sequence
    Initial hidden state is set explicitly via standalone gsap.set() calls
    (which render synchronously) and the timeline below only ever animates
    TO explicit values. Chaining .from() inside a timeline is fragile here:
    a .from() tween captures its destination from whatever is on screen at
    construction time, and a preceding timeline.set() hasn't rendered yet at
    that point (timeline children only render once the playhead reaches
-   them), so the destination gets captured as the still-hidden CSS state. */
+   them), so the destination gets captured as the still-hidden CSS state.
+
+   Order: brief hold on bg-primary -> logo clip-path wipe -> nav items
+   stagger in -> headline reveals word-by-word (up + slight rotation,
+   settling to 0) -> the shader ramps in underneath that same reveal
+   (not before it), so the text feels like it's arriving into an
+   already-alive environment rather than the environment arriving after. */
+gsap.set('.logo img', { clipPath: 'inset(0 100% 0 0)' });
+gsap.set('#navLinks a, .nav-cta', { opacity: 0, y: 10 });
 gsap.set('.eyebrow[data-hero-el]', { opacity: 0, y: 16 });
-gsap.set('[data-hero-line]', { yPercent: 110, opacity: 0 });
 gsap.set('.hero-sub', { opacity: 0, y: 20 });
 gsap.set('.hero-actions', { opacity: 0, y: 20 });
 gsap.set('.hero-meta', { opacity: 0, y: 16 });
 gsap.set('.hero-visual', { opacity: 0, x: 40 });
 gsap.set('.floating-badge', { opacity: 0, y: 14, scale: 0.9 });
+if (!prefersReducedMotion) gsap.set('#heroCanvas', { opacity: 0 });
+
+/* Split the two headline lines into words so each one can animate up
+   with its own slight rotation. Falls back to a plain reveal of the
+   whole line if SplitType didn't load (offline CDN, etc.). */
+const heroSplit = (typeof SplitType !== 'undefined')
+  ? new SplitType('.hero-title .title-line', { types: 'words', wordClass: 'word' })
+  : null;
+const heroWords = heroSplit ? heroSplit.words : gsap.utils.toArray('.hero-title .title-line');
+const randomTilt = () => prefersReducedMotion ? 0 : (Math.random() < 0.5 ? -1 : 1) * gsap.utils.random(2, 4);
+gsap.set(heroWords, { opacity: 0, yPercent: 100, rotate: randomTilt });
 
 /* Hero stats count-up — any number visible above the fold at load
    (the "+64%" badge, the mockup's 120+ / 4.9★ / 7gg) charges up from 0
@@ -153,59 +191,73 @@ function startHeroCountUps() {
       val: target,
       duration: 1.1,
       delay: i * 0.15,
-      ease: 'power3.out',
+      ease: 'easeReveal',
       onUpdate: () => { el.textContent = formatCount(proxy.val, decimals, prefix, suffix); },
     });
   });
 }
 
-const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+const heroTl = gsap.timeline({ defaults: { ease: 'easeReveal' } });
 
 heroTl
-  .to('.eyebrow[data-hero-el]', { y: 0, opacity: 1, duration: 0.7 }, 0.15)
-  .to('[data-hero-line]', {
-    yPercent: 0,
-    opacity: 1,
-    duration: 1,
-    stagger: 0.08,
-  }, 0.25)
-  .to('.hero-sub', { y: 0, opacity: 1, duration: 0.8 }, 0.55)
-  .to('.hero-actions', { y: 0, opacity: 1, duration: 0.8 }, 0.68)
-  .to('.hero-meta', { y: 0, opacity: 1, duration: 0.7 }, 0.78)
-  .to('.hero-visual', {
-    x: 0,
-    opacity: 1,
-    duration: 1.2,
-    ease: 'power4.out',
-  }, 0.35)
-  .to('.floating-badge', {
-    y: 0,
-    opacity: 1,
-    scale: 1,
-    duration: 0.7,
-    stagger: 0.12,
-  }, 1.1)
+  // 1. brief hold on solid bg-primary before anything moves
+  .to({}, { duration: prefersReducedMotion ? 0.01 : 0.2 })
+  // 2. logo reveals via a clip-path wipe, not an opacity fade
+  .to('.logo img', { clipPath: 'inset(0 0% 0 0)', duration: 0.4 })
+  // 3. nav items stagger in, 60ms apart, overlapping the tail of the wipe
+  .to('#navLinks a, .nav-cta', { opacity: 1, y: 0, duration: 0.25, stagger: 0.06 }, '-=0.25')
+  .to('.eyebrow[data-hero-el]', { opacity: 1, y: 0, duration: 0.4 }, '-=0.3')
+  // 4. headline reveals word-by-word: up + slight rotation settling to 0
+  .to(heroWords, { opacity: 1, yPercent: 0, rotate: 0, duration: 0.5, stagger: 0.025 }, '-=0.2')
+  // 5. the shader ramps in at the exact same moment the headline starts
+  //    revealing (never before it) — arriving into an already-alive scene
+  .to('#heroCanvas', { opacity: 1, duration: 0.9 }, '<')
+  .to('.hero-sub', { y: 0, opacity: 1, duration: 0.6 }, '-=0.25')
+  .to('.hero-actions', { y: 0, opacity: 1, duration: 0.6 }, '-=0.4')
+  .to('.hero-meta', { y: 0, opacity: 1, duration: 0.5 }, '-=0.45')
+  .to('.hero-visual', { x: 0, opacity: 1, duration: 0.9 }, '-=0.8')
+  .to('.floating-badge', { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1 }, '-=0.4')
   .call(startHeroCountUps);
 
-/* Generic scroll reveal for section elements — scrubbed to scroll
-   position so content visibly assembles as the user scrolls, rather
-   than popping in fully formed and sitting still. Reverses cleanly
-   on scroll-up since it's tied directly to scroll progress. */
-const revealEls = gsap.utils.toArray('.reveal');
-
-revealEls.forEach((el) => {
-  gsap.set(el, { opacity: 1 });
-  gsap.from(el, {
-    y: 64,
-    opacity: 0,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: el,
-      start: 'top 92%',
-      end: 'top 48%',
-      scrub: 0.5,
-    },
+/* Scroll reveals — triggered once at ~78% viewport entry (anticipated,
+   not delayed), not continuous scrub: this is content arriving, not
+   something structurally tied to live scroll position like the
+   horizontal timeline or hero parallax below. Three deliberately
+   different treatments so the page doesn't read as one animation
+   copy-pasted everywhere:
+   - Headlines: masked lines slide up from their own clip boundary
+   - Body copy: simple opacity + 20px Y — restraint matters here
+   - Portfolio images: clip-path wipe + scale-down from 1.05 to 1.0
+   Every group staggers 60-100ms per item; nothing syncs in unison. */
+gsap.utils.toArray('.section-title').forEach((title) => {
+  const lines = title.querySelectorAll('.line');
+  if (!lines.length) return;
+  gsap.set(lines, { yPercent: 100 });
+  gsap.to(lines, {
+    yPercent: 0,
+    duration: 0.8,
+    ease: 'easeReveal',
+    stagger: 0.08,
+    scrollTrigger: { trigger: title, start: 'top 78%', once: true },
   });
+});
+
+gsap.set('.reveal', { opacity: 0, y: 20 });
+ScrollTrigger.batch('.reveal', {
+  start: 'top 78%',
+  once: true,
+  onEnter: (batch) => gsap.to(batch, {
+    opacity: 1, y: 0, duration: 0.7, ease: 'easeReveal', stagger: 0.07,
+  }),
+});
+
+gsap.set('.reveal-image', { clipPath: 'inset(0 0 100% 0)', scale: 1.05, opacity: 0 });
+ScrollTrigger.batch('.reveal-image', {
+  start: 'top 78%',
+  once: true,
+  onEnter: (batch) => gsap.to(batch, {
+    clipPath: 'inset(0 0 0% 0)', scale: 1, opacity: 1, duration: 0.9, ease: 'easeReveal', stagger: 0.1,
+  }),
 });
 
 /* Problem -> Solution scroll-pinned dissolve. Pins the statement for
@@ -247,8 +299,8 @@ const mockupWrap = document.getElementById('mockupWrap');
 const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 if (mockupWrap && canHover && !prefersReducedMotion) {
-  const rotateX = gsap.quickTo(mockupWrap, 'rotationX', { duration: 0.7, ease: 'power3.out' });
-  const rotateY = gsap.quickTo(mockupWrap, 'rotationY', { duration: 0.7, ease: 'power3.out' });
+  const rotateX = gsap.quickTo(mockupWrap, 'rotationX', { duration: 0.7, ease: 'easeHover' });
+  const rotateY = gsap.quickTo(mockupWrap, 'rotationY', { duration: 0.7, ease: 'easeHover' });
 
   document.querySelector('.hero').addEventListener('mousemove', (e) => {
     const rect = mockupWrap.getBoundingClientRect();
@@ -316,19 +368,19 @@ if (planCards.length) {
   });
 
   if (canHover && !prefersReducedMotion) {
-    const servicesGrid = document.querySelector('.services-grid');
+    const TILT_MAX = 9;
 
-    const controllers = planCards.map((card) => {
+    planCards.forEach((card) => {
       const inner = card.querySelector('.plan-card-inner');
       const baseScale = card.classList.contains('plan-card--featured') ? 1.04 : 1;
 
-      const setRotateX = gsap.quickTo(card, 'rotationX', { duration: 0.6, ease: 'power3.out' });
-      const setRotateY = gsap.quickTo(card, 'rotationY', { duration: 0.6, ease: 'power3.out' });
+      const setRotateX = gsap.quickTo(card, 'rotationX', { duration: 0.6, ease: 'easeHover' });
+      const setRotateY = gsap.quickTo(card, 'rotationY', { duration: 0.6, ease: 'easeHover' });
       // 'scale' (like 'rotateX'/'rotateY') isn't reliable as a quickTo
       // property string on a fresh element — scaleX/scaleY are the
       // real, unaliased properties and compose the same visual result.
-      const setScaleX = gsap.quickTo(card, 'scaleX', { duration: 0.4, ease: 'power3.out' });
-      const setScaleY = gsap.quickTo(card, 'scaleY', { duration: 0.4, ease: 'power3.out' });
+      const setScaleX = gsap.quickTo(card, 'scaleX', { duration: 0.4, ease: 'easeHover' });
+      const setScaleY = gsap.quickTo(card, 'scaleY', { duration: 0.4, ease: 'easeHover' });
       const setScale = (v) => { setScaleX(v); setScaleY(v); };
       setScale(baseScale);
 
@@ -341,25 +393,25 @@ if (planCards.length) {
         delay: Math.random() * 0.6,
       });
 
-      card.addEventListener('mouseenter', () => setScale(baseScale * 1.02));
-      card.addEventListener('mouseleave', () => setScale(baseScale));
-
-      return { card, setRotateX, setRotateY };
-    });
-
-    servicesGrid.addEventListener('mousemove', (e) => {
-      controllers.forEach(({ card, setRotateX, setRotateY }) => {
+      // tilt tracks the cursor's exact position within THIS card's own
+      // bounds (classic tilt-card technique) — not a grid-wide proximity
+      // field. Also drives the CSS specular-highlight position via --mx/--my.
+      card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
-        const dx = e.clientX - (rect.left + rect.width / 2);
-        const dy = e.clientY - (rect.top + rect.height / 2);
-        const strength = Math.max(0, 1 - Math.hypot(dx, dy) / 420);
-        setRotateY((dx / rect.width) * 10 * strength);
-        setRotateX((-dy / rect.height) * 10 * strength);
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        setRotateY((px - 0.5) * 2 * TILT_MAX);
+        setRotateX(-(py - 0.5) * 2 * TILT_MAX);
+        card.style.setProperty('--mx', `${px * 100}%`);
+        card.style.setProperty('--my', `${py * 100}%`);
       });
-    });
 
-    servicesGrid.addEventListener('mouseleave', () => {
-      controllers.forEach(({ setRotateX, setRotateY }) => { setRotateX(0); setRotateY(0); });
+      card.addEventListener('mouseenter', () => setScale(baseScale * 1.02));
+      card.addEventListener('mouseleave', () => {
+        setScale(baseScale);
+        setRotateX(0);
+        setRotateY(0);
+      });
     });
   }
 }
@@ -391,7 +443,7 @@ function initScrollCountUp(selector, duration) {
         gsap.to(proxy, {
           val: target,
           duration,
-          ease: 'power3.out',
+          ease: 'easeReveal',
           onUpdate: () => { el.textContent = formatCount(proxy.val, decimals, prefix, suffix); },
         });
       },
@@ -418,9 +470,10 @@ const isDesktopProcess = window.matchMedia('(min-width: 900px)').matches;
 
 if (processPin && processTrack) {
   const stepInners = gsap.utils.toArray('.process-step-inner');
+  const bgTrack = document.getElementById('processBgTrack');
 
   if (isDesktopProcess && !prefersReducedMotion) {
-    gsap.set(stepInners, { opacity: 0.25, y: 24 });
+    gsap.set(stepInners, { opacity: 0.6, y: 24, scale: 1 });
 
     let totalScroll = 0;
     let pinDuration = 0;
@@ -438,13 +491,17 @@ if (processPin && processTrack) {
       trigger: processPin,
       start: 'top top',
       end: () => '+=' + pinDuration,
-      scrub: 0.4,
+      scrub: 0.7,
       pin: true,
       anticipatePin: 1,
       invalidateOnRefresh: true,
       onRefresh: computeProcessScroll,
       onUpdate: (self) => {
-        gsap.set(processTrack, { x: -totalScroll * self.progress });
+        const x = -totalScroll * self.progress;
+        gsap.set(processTrack, { x });
+        // background rail moves at ~0.6x the foreground cards' speed —
+        // the real parallax depth cue, not just a static backdrop
+        if (bgTrack) gsap.set(bgTrack, { x: x * 0.6 });
 
         steps.forEach((step, i) => {
           const inner = step.querySelector('.process-step-inner');
@@ -452,9 +509,13 @@ if (processPin && processTrack) {
           const dist = Math.abs(self.progress - bandCenter) / (1 / steps.length);
           const closeness = gsap.utils.clamp(0, 1, 1 - dist);
           gsap.set(inner, {
-            opacity: gsap.utils.interpolate(0.25, 1, closeness),
+            opacity: gsap.utils.interpolate(0.6, 1, closeness),
             y: gsap.utils.interpolate(24, 0, closeness),
+            scale: gsap.utils.interpolate(1, 1.08, closeness),
           });
+          inner.style.boxShadow = closeness > 0.05
+            ? `0 0 ${Math.round(closeness * 50)}px ${Math.round(closeness * 6)}px rgba(79,191,170,${(closeness * 0.35).toFixed(2)})`
+            : 'none';
         });
       },
     });
@@ -484,7 +545,7 @@ if (processPin && processTrack) {
    to the case-study's own scroll position, so scrolling back up
    un-builds it cleanly rather than just replaying a fixed animation. */
 if (!prefersReducedMotion) {
-  gsap.utils.toArray('.case-study').forEach((study) => {
+  gsap.utils.toArray('.case-study:not(.case-study--travelmap)').forEach((study) => {
     // scoped to .compare-after specifically — the "before" mockup
     // reuses .mockup-chrome for its own browser-frame look, so an
     // unscoped query would be one DOM-order accident away from
@@ -646,15 +707,15 @@ function initShaderBackground(canvasId, sectionSelector) {
       float lightN = snoise(p * 1.1 - vec2(t * 0.25, t * 0.35) + 91.0);
       lightN = lightN * 0.5 + 0.5;
 
-      vec3 bg = vec3(0.0431, 0.0588, 0.0549);
-      vec3 teal = vec3(0.0039, 0.4118, 0.4353);
-      vec3 tealBright = vec3(0.1333, 0.7804, 0.8000);
-      vec3 tealLight = vec3(0.3098, 0.7490, 0.6667);
+      /* two-accent system only, matching the CSS palette exactly */
+      vec3 bg = vec3(0.0431, 0.0588, 0.0549);          /* --bg-primary */
+      vec3 accentDeep = vec3(0.0039, 0.4118, 0.4353);  /* --accent-deep */
+      vec3 accentBright = vec3(0.3098, 0.7490, 0.6667); /* --accent-bright */
 
       vec3 col = bg;
-      col = mix(col, teal, smoothstep(0.40, 0.80, n));
-      col = mix(col, tealBright, smoothstep(0.80, 1.02, n) * 0.5);
-      col = mix(col, tealLight, smoothstep(0.64, 0.92, lightN) * 0.16);
+      col = mix(col, accentDeep, smoothstep(0.40, 0.80, n));
+      col = mix(col, accentBright, smoothstep(0.80, 1.02, n) * 0.5);
+      col = mix(col, accentBright, smoothstep(0.64, 0.92, lightN) * 0.16);
 
       /* concentrate the glow around the mockup on the right; fall to
          near-pure background on the left where the headline sits */
@@ -773,33 +834,72 @@ initShaderBackground('heroCanvas', '.hero');
 initShaderBackground('contactCanvas', '.contact');
 
 /* ---------------------------------------------------------------
-   Magnetic pull on the contact WhatsApp CTA — the conversion point,
-   so it gets the most "expensive" feeling interaction on the site.
-   Within a radius of the button it noticeably pulls toward the
-   cursor; outside that radius (or on leave) it snaps back to rest. */
+   Magnetic CTAs — every primary button pulls gently toward the
+   cursor within a 40px radius (max ~10px of travel, so it reads as a
+   pull, not a chase) and springs back on leave. The contact WhatsApp
+   CTA additionally carries the strongest glow (.btn-magnetic, CSS),
+   since it's the conversion point — this is the single interaction
+   that does the most for the "expensive" feel, so every primary
+   button gets it, not just one.
+   --------------------------------------------------------------- */
 if (canHover && !prefersReducedMotion) {
-  const magneticBtn = document.querySelector('.btn-magnetic');
-  if (magneticBtn) {
-    const setX = gsap.quickTo(magneticBtn, 'x', { duration: 0.5, ease: 'power3.out' });
-    const setY = gsap.quickTo(magneticBtn, 'y', { duration: 0.5, ease: 'power3.out' });
-    const radius = 110;
-    const pull = 0.4;
+  const MAGNETIC_RADIUS = 40;
+  const MAGNETIC_MAX = 11;
 
-    window.addEventListener('mousemove', (e) => {
-      const rect = magneticBtn.getBoundingClientRect();
+  // bound on the document, not the button: a listener on the button
+  // itself only ever fires once the cursor is already inside its box,
+  // which would make the 40px "pull from outside" radius dead code.
+  const magneticButtons = Array.from(document.querySelectorAll('.btn-primary')).map((btn) => ({
+    btn,
+    setX: gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'easeHover' }),
+    setY: gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'easeHover' }),
+  }));
+
+  document.addEventListener('mousemove', (e) => {
+    magneticButtons.forEach(({ btn, setX, setY }) => {
+      const rect = btn.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dx = e.clientX - cx;
       const dy = e.clientY - cy;
-      const dist = Math.hypot(dx, dy);
+      const dist = Math.hypot(dx, dy) || 1;
+      const strength = Math.min(1, (MAGNETIC_RADIUS + Math.max(rect.width, rect.height) / 2 - dist) / MAGNETIC_RADIUS);
+      const clamped = Math.max(0, strength);
+      setX((dx / dist) * MAGNETIC_MAX * clamped);
+      setY((dy / dist) * MAGNETIC_MAX * clamped);
+    });
+  });
+}
 
-      if (dist < radius) {
-        setX(dx * pull);
-        setY(dy * pull);
-      } else {
-        setX(0);
-        setY(0);
-      }
+/* ---------------------------------------------------------------
+   Custom cursor — small solid dot + trailing outlined ring, both
+   lagging behind the real pointer via GSAP quickTo (never 1:1
+   instant tracking). The ring grows on links/buttons/the compare
+   slider to hint interactivity. Desktop fine-pointer only; falls
+   back to the native cursor otherwise or under reduced motion.
+   --------------------------------------------------------------- */
+if (canHover && !prefersReducedMotion) {
+  document.documentElement.classList.add('has-custom-cursor');
+
+  const dotWrap = document.getElementById('cursorDotWrap');
+  const ringWrap = document.getElementById('cursorRingWrap');
+
+  if (dotWrap && ringWrap) {
+    const setDotX = gsap.quickTo(dotWrap, 'x', { duration: 0.12, ease: 'easeHover' });
+    const setDotY = gsap.quickTo(dotWrap, 'y', { duration: 0.12, ease: 'easeHover' });
+    const setRingX = gsap.quickTo(ringWrap, 'x', { duration: 0.32, ease: 'easeHover' });
+    const setRingY = gsap.quickTo(ringWrap, 'y', { duration: 0.32, ease: 'easeHover' });
+
+    window.addEventListener('mousemove', (e) => {
+      setDotX(e.clientX);
+      setDotY(e.clientY);
+      setRingX(e.clientX);
+      setRingY(e.clientY);
+    });
+
+    document.querySelectorAll('a, button, .btn, .compare').forEach((el) => {
+      el.addEventListener('mouseenter', () => ringWrap.classList.add('is-active'));
+      el.addEventListener('mouseleave', () => ringWrap.classList.remove('is-active'));
     });
   }
 }

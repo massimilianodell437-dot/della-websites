@@ -139,51 +139,6 @@ em { font-style: italic; color: var(--accent-bright); font-family: var(--font-di
   .scroll-progress span.is-pulsing { animation: none; }
 }
 
-/* ---------- custom cursor: dot + trailing ring, desktop/fine-pointer
-   only (JS gates on hover:hover + pointer:fine + !prefers-reduced-motion,
-   falling back to the native cursor otherwise) ---------- */
-.cursor-dot-wrap,
-.cursor-ring-wrap {
-  position: fixed;
-  top: 0; left: 0;
-  pointer-events: none;
-  z-index: 10000;
-  opacity: 0;
-}
-html.has-custom-cursor .cursor-dot-wrap,
-html.has-custom-cursor .cursor-ring-wrap {
-  opacity: 1;
-}
-.cursor-dot {
-  display: block;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--accent-bright);
-  transform: translate(-50%, -50%);
-}
-.cursor-ring {
-  display: block;
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  border: 1.5px solid var(--accent-bright);
-  opacity: 0.6;
-  transform: translate(-50%, -50%);
-  transition: width .25s var(--ease-hover), height .25s var(--ease-hover), opacity .25s var(--ease-hover), border-color .25s var(--ease-hover);
-}
-.cursor-ring-wrap.is-active .cursor-ring {
-  width: 48px; height: 48px;
-  opacity: 0.9;
-}
-html.has-custom-cursor,
-html.has-custom-cursor a,
-html.has-custom-cursor button,
-html.has-custom-cursor .btn,
-html.has-custom-cursor input,
-html.has-custom-cursor select,
-html.has-custom-cursor textarea,
-html.has-custom-cursor .compare {
-  cursor: none;
-}
 
 /* ==========================================================================
    Navbar
@@ -701,10 +656,14 @@ section { position: relative; padding: 130px 0; }
 /* ==========================================================================
    Problem
    ========================================================================== */
-.problem { background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.problem {
+  background: radial-gradient(ellipse 55% 55% at 50% 40%, rgba(79, 191, 170, 0.06), transparent 70%), var(--bg-soft);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
 
 .problem-pin {
-  height: 100vh;
+  height: 78vh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -777,6 +736,7 @@ section { position: relative; padding: 130px 0; }
 .services {
   position: relative;
   overflow: hidden;
+  background: radial-gradient(ellipse 55% 60% at 50% 45%, rgba(79, 191, 170, 0.06), transparent 70%);
 }
 .services::before,
 .services::after {
@@ -842,9 +802,6 @@ section { position: relative; padding: 130px 0; }
   opacity: 1;
 }
 
-/* idle float runs on this inner wrapper so it never fights the
-   outer card's cursor-tilt / entrance / hover transforms on the
-   same transform property */
 .plan-card-inner {
   position: relative;
   z-index: 1;
@@ -906,53 +863,32 @@ section { position: relative; padding: 130px 0; }
 }
 
 /* ==========================================================================
-   Process — horizontal scroll-scrubbed timeline. The section pins for
-   one screen height; vertical scroll progress drives .process-track's
-   horizontal position (JS) while each step's inner content animates in
-   as its card nears center (also scroll-driven, not timer-based).
+   Process — static 3-column grid (1-column on mobile). Each step fades
+   in independently on its own scroll position (JS: simple threshold
+   crossfade, reversible both directions) — no pinning, no scrub, no
+   horizontal scroll. That pinned/scrubbed version was reworked twice
+   and still read as broken, so this trades the choreography for
+   something that just reliably works.
    ========================================================================== */
 .process-pin {
   position: relative;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 64px;
-  overflow: hidden;
+  padding: 110px 0;
   background: radial-gradient(ellipse 55% 60% at 50% 42%, rgba(79, 191, 170, 0.07), transparent 70%);
 }
-.process-heading { flex-shrink: 0; position: relative; z-index: 1; }
-
-/* background timeline rail — moves at ~0.6x the foreground cards'
-   speed (JS), the real depth cue behind the horizontal scrub */
-.process-bg-track {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 300%;
-  height: 1px;
-  background: repeating-linear-gradient(90deg, var(--border-strong) 0 2px, transparent 2px 72px);
-  opacity: 0.6;
-  z-index: 0;
-  pointer-events: none;
-}
+.process-heading { position: relative; z-index: 1; margin-bottom: 60px; }
 
 .process-track-wrap {
   position: relative;
   z-index: 1;
-  overflow: hidden;
   width: 100%;
 }
 .process-track {
-  display: flex;
-  gap: 48px;
-  width: max-content;
-  padding-left: max(32px, calc((100vw - 1240px) / 2 + 32px));
-  padding-right: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
 }
 .process-step {
-  flex: 0 0 auto;
-  width: min(520px, 78vw);
+  width: 100%;
 }
 /* consistent card treatment for all three steps — border/padding/accent
    bar live here, independent of the scroll-driven active/passive scale
@@ -1368,15 +1304,11 @@ section { position: relative; padding: 130px 0; }
    Responsive
    ========================================================================== */
 @media (max-width: 899px) {
-  .process-pin { height: auto; overflow: visible; gap: 40px; padding: 0 0 10px; }
-  .process-track-wrap { overflow: visible; }
+  .process-pin { padding: 70px 0; }
   .process-track {
-    flex-direction: column;
-    width: 100%;
-    padding: 0;
+    grid-template-columns: 1fr;
     gap: 40px;
   }
-  .process-step { width: 100%; }
 
   /* pricing cards become a swipeable, snap-to-card carousel on mobile —
      native scroll-snap gives real touch momentum for free, so this

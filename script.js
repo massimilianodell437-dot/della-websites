@@ -342,13 +342,11 @@ if (!prefersReducedMotion) {
 }
 
 /* ---------------------------------------------------------------
-   Services — glass cards: staggered scroll-scrub entrance, idle float,
-   cursor-proximity tilt, and a scroll-triggered (once) price count-up.
-
-   Idle float runs on each card's INNER wrapper while tilt/entrance/
-   hover-scale run on the OUTER card — two different elements, so none
-   of these ever fight over the same transform property on the same
-   GSAP target (the exact bug class this file avoids elsewhere too).
+   Services — glass cards: staggered scroll-scrub entrance, cursor-XY
+   tilt on hover, and a scroll-triggered (once) price count-up. No
+   idle/ambient motion once settled — these cards hold text the visitor
+   needs to read, so once the entrance animation finishes the layout
+   stays still until the user's cursor moves over a card.
    --------------------------------------------------------------- */
 const planCards = gsap.utils.toArray('.plan-card');
 
@@ -371,7 +369,6 @@ if (planCards.length) {
     const TILT_MAX = 9;
 
     planCards.forEach((card) => {
-      const inner = card.querySelector('.plan-card-inner');
       const baseScale = card.classList.contains('plan-card--featured') ? 1.04 : 1;
 
       const setRotateX = gsap.quickTo(card, 'rotationX', { duration: 0.6, ease: 'easeHover' });
@@ -383,15 +380,6 @@ if (planCards.length) {
       const setScaleY = gsap.quickTo(card, 'scaleY', { duration: 0.4, ease: 'easeHover' });
       const setScale = (v) => { setScaleX(v); setScaleY(v); };
       setScale(baseScale);
-
-      gsap.to(inner, {
-        y: -7,
-        duration: 2.6 + Math.random() * 1.2,
-        yoyo: true,
-        repeat: -1,
-        ease: 'sine.inOut',
-        delay: Math.random() * 0.6,
-      });
 
       // tilt tracks the cursor's exact position within THIS card's own
       // bounds (classic tilt-card technique) — not a grid-wide proximity
@@ -493,86 +481,31 @@ initScrollCountUp('.price-num', 0.8);
 initScrollCountUp('.stat-num-count', 0.9);
 
 /* ---------------------------------------------------------------
-   How it works — horizontal scroll-scrubbed timeline. The section
-   pins for as much vertical scroll as the track needs, and vertical
-   scroll progress directly drives the track's horizontal position
-   (recalculated on resize). Each step's content animates in as its
-   card nears center, driven by the same live progress value — not a
-   timer. Desktop only: on narrow/touch viewports a pinned horizontal
-   drag reads as broken, so mobile gets a plain vertical scrub reveal
-   instead (matching the rest of the site's fallback pattern).
+   Come funziona — each step is a static grid cell (no pinning, no
+   horizontal scroll) that crossfades in on a simple scroll-position
+   threshold: opacity + a small Y-offset, ease-reveal, ~450ms.
+   toggleActions plays it going down and reverses it going back up, so
+   it's reliable in both scroll directions without scrub math. A
+   previous pinned/scrubbed version of this was reworked twice and
+   still read as broken — this trades the choreography for something
+   that just works.
    --------------------------------------------------------------- */
-const processPin = document.getElementById('processPin');
-const processTrack = document.getElementById('processTrack');
-const isDesktopProcess = window.matchMedia('(min-width: 900px)').matches;
-
-if (processPin && processTrack) {
-  const stepInners = gsap.utils.toArray('.process-step-inner');
-  const bgTrack = document.getElementById('processBgTrack');
-
-  if (isDesktopProcess && !prefersReducedMotion) {
-    gsap.set(stepInners, { opacity: 0.6, y: 24, scale: 1 });
-
-    let totalScroll = 0;
-    let pinDuration = 0;
-    function computeProcessScroll() {
-      totalScroll = Math.max(0, processTrack.scrollWidth - window.innerWidth);
-      // paced independently of the raw overflow so a short track still
-      // gives each step deliberate scroll room instead of flicking by
-      pinDuration = Math.max(totalScroll * 3, 1200);
-    }
-    computeProcessScroll();
-
-    const steps = gsap.utils.toArray('.process-step');
-
-    ScrollTrigger.create({
-      trigger: processPin,
-      start: 'top top',
-      end: () => '+=' + pinDuration,
-      scrub: 0.7,
-      pin: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onRefresh: computeProcessScroll,
-      onUpdate: (self) => {
-        const x = -totalScroll * self.progress;
-        gsap.set(processTrack, { x });
-        // background rail moves at ~0.6x the foreground cards' speed —
-        // the real parallax depth cue, not just a static backdrop
-        if (bgTrack) gsap.set(bgTrack, { x: x * 0.6 });
-
-        steps.forEach((step, i) => {
-          const inner = step.querySelector('.process-step-inner');
-          const bandCenter = (i + 0.5) / steps.length;
-          const dist = Math.abs(self.progress - bandCenter) / (1 / steps.length);
-          const closeness = gsap.utils.clamp(0, 1, 1 - dist);
-          gsap.set(inner, {
-            opacity: gsap.utils.interpolate(0.6, 1, closeness),
-            y: gsap.utils.interpolate(24, 0, closeness),
-            scale: gsap.utils.interpolate(1, 1.08, closeness),
-          });
-          inner.style.boxShadow = closeness > 0.05
-            ? `0 0 ${Math.round(closeness * 50)}px ${Math.round(closeness * 6)}px rgba(79,191,170,${(closeness * 0.35).toFixed(2)})`
-            : 'none';
-        });
-      },
-    });
-  } else {
-    gsap.set(stepInners, { opacity: 1 });
-    stepInners.forEach((el) => {
-      gsap.from(el, {
-        y: 48,
-        opacity: 0,
-        ease: 'none',
+if (!prefersReducedMotion) {
+  gsap.utils.toArray('.process-step-inner').forEach((el) => {
+    gsap.fromTo(el,
+      { opacity: 0, y: 26 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.45,
+        ease: 'easeReveal',
         scrollTrigger: {
           trigger: el,
-          start: 'top 90%',
-          end: 'top 55%',
-          scrub: 0.5,
+          start: 'top 82%',
+          toggleActions: 'play none none reverse',
         },
       });
-    });
-  }
+  });
 }
 
 /* ---------------------------------------------------------------
@@ -961,35 +894,3 @@ if (canHover && !prefersReducedMotion) {
   });
 }
 
-/* ---------------------------------------------------------------
-   Custom cursor — small solid dot + trailing outlined ring, both
-   lagging behind the real pointer via GSAP quickTo (never 1:1
-   instant tracking). The ring grows on links/buttons/the compare
-   slider to hint interactivity. Desktop fine-pointer only; falls
-   back to the native cursor otherwise or under reduced motion.
-   --------------------------------------------------------------- */
-if (canHover && !prefersReducedMotion) {
-  document.documentElement.classList.add('has-custom-cursor');
-
-  const dotWrap = document.getElementById('cursorDotWrap');
-  const ringWrap = document.getElementById('cursorRingWrap');
-
-  if (dotWrap && ringWrap) {
-    const setDotX = gsap.quickTo(dotWrap, 'x', { duration: 0.05, ease: 'easeHover' });
-    const setDotY = gsap.quickTo(dotWrap, 'y', { duration: 0.05, ease: 'easeHover' });
-    const setRingX = gsap.quickTo(ringWrap, 'x', { duration: 0.11, ease: 'easeHover' });
-    const setRingY = gsap.quickTo(ringWrap, 'y', { duration: 0.11, ease: 'easeHover' });
-
-    window.addEventListener('mousemove', (e) => {
-      setDotX(e.clientX);
-      setDotY(e.clientY);
-      setRingX(e.clientX);
-      setRingY(e.clientY);
-    });
-
-    document.querySelectorAll('a, button, .btn, .compare').forEach((el) => {
-      el.addEventListener('mouseenter', () => ringWrap.classList.add('is-active'));
-      el.addEventListener('mouseleave', () => ringWrap.classList.remove('is-active'));
-    });
-  }
-}

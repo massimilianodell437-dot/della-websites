@@ -24,7 +24,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Piazzolla:ital,opsz,wght@0,8..30,400;0,8..30,500;0,8..30,600;0,8..30,700;1,8..30,500;1,8..30,600&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="public/assets/logo-mark-teal.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="public/assets/apple-touch-icon.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -34,7 +35,7 @@
 
 <header class="navbar" id="navbar">
   <div class="nav-inner container">
-    <a class="logo" href="#top">Della<span class="dot">.</span></a>
+    <a class="logo" href="#top"><img src="public/assets/lockup-white.svg" alt="Della" width="126" height="30"></a>
 
     <nav class="nav-links" id="navLinks">
       <a href="#problema" data-nav>Il problema</a>
@@ -177,15 +178,15 @@
   <div class="container">
     <div class="problem-grid">
       <div class="problem-stat reveal">
-        <span class="stat-num">53<small>%</small></span>
+        <span class="stat-num"><span class="stat-num-count" data-count-to="53">53</span><small>%</small></span>
         <p>degli utenti abbandona un sito se non si carica entro 3 secondi.</p>
       </div>
       <div class="problem-stat reveal">
-        <span class="stat-num">88<small>%</small></span>
+        <span class="stat-num"><span class="stat-num-count" data-count-to="88">88</span><small>%</small></span>
         <p>non torna più su un sito dopo una brutta prima esperienza mobile.</p>
       </div>
       <div class="problem-stat reveal">
-        <span class="stat-num">1<small>°</small></span>
+        <span class="stat-num"><span class="stat-num-count" data-count-to="1">1</span><small>°</small></span>
         <p>posto: dove i clienti ti cercano prima ancora di chiamarti. Google, non il passaparola.</p>
       </div>
     </div>
@@ -322,28 +323,60 @@
 
       <article class="case-study reveal">
         <div class="case-visual">
-          <div class="mockup-frame mockup-frame--case">
-            <div class="mockup-chrome">
-              <div class="mockup-dots"><span></span><span></span><span></span></div>
-              <div class="mockup-url">personaltrainer-benevento.it</div>
-            </div>
-            <div class="mockup-body mockup-body--pt mockup-body--small">
-              <div class="mockup-nav">
-                <span class="mockup-logo">MARCO<em>FIT</em></span>
-                <span class="mockup-navbtn">Prenota</span>
-              </div>
-              <div class="mockup-hero mockup-hero--small">
-                <div class="mockup-portrait" aria-hidden="true">
-                  <div class="portrait-shape shape-1"></div>
-                  <div class="portrait-shape shape-2"></div>
+          <div class="compare" id="comparePt">
+            <div class="compare-after">
+              <div class="mockup-frame mockup-frame--case">
+                <div class="mockup-chrome">
+                  <div class="mockup-dots"><span></span><span></span><span></span></div>
+                  <div class="mockup-url">personaltrainer-benevento.it</div>
                 </div>
-                <div class="mockup-hero-text">
-                  <span class="mockup-kicker">Personal Trainer</span>
-                  <span class="mockup-h1">Trasforma<br>il tuo corpo.</span>
-                  <span class="mockup-cta">Prenota →</span>
+                <div class="mockup-body mockup-body--pt mockup-body--small">
+                  <div class="mockup-nav">
+                    <span class="mockup-logo">MARCO<em>FIT</em></span>
+                    <span class="mockup-navbtn">Prenota</span>
+                  </div>
+                  <div class="mockup-hero mockup-hero--small">
+                    <div class="mockup-portrait" aria-hidden="true">
+                      <div class="portrait-shape shape-1"></div>
+                      <div class="portrait-shape shape-2"></div>
+                    </div>
+                    <div class="mockup-hero-text">
+                      <span class="mockup-kicker">Personal Trainer</span>
+                      <span class="mockup-h1">Trasforma<br>il tuo corpo.</span>
+                      <span class="mockup-cta">Prenota →</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="compare-before">
+              <div class="mockup-frame mockup-frame--case mockup-frame--before">
+                <div class="mockup-chrome">
+                  <div class="mockup-dots"><span></span><span></span><span></span></div>
+                  <div class="mockup-url">personaltrainer-benevento.altervista.org</div>
+                </div>
+                <div class="mockup-body mockup-body--before">
+                  <div class="before-topbar">PERSONAL TRAINER BENEVENTO</div>
+                  <div class="before-nav">Home&nbsp;|&nbsp;Chi Sono&nbsp;|&nbsp;Servizi&nbsp;|&nbsp;Contatti</div>
+                  <div class="before-content">
+                    <div class="before-photo" aria-hidden="true"></div>
+                    <div class="before-text">
+                      <p><b>Benvenuti nel sito di Marco!!!</b><br>Personal trainer certificato a Benevento. Se cerchi un allenamento su misura sei nel posto giusto.</p>
+                      <p>Chiamaci al numero <b>0824-XXXXXX</b> per informazioni</p>
+                      <a href="#" class="before-link" tabindex="-1">Clicca qui per contattarmi</a>
+                    </div>
+                  </div>
+                  <div class="before-footer">© 2013 — Sito ottimizzato per Internet Explorer</div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-handle" aria-hidden="true">
+              <span class="compare-handle-line"></span>
+              <span class="compare-handle-grip">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L3 12l6 6"/><path d="M15 6l6 6-6 6"/></svg>
+              </span>
+            </div>
+            <span class="compare-hint">Trascina per confrontare</span>
           </div>
         </div>
         <div class="case-copy">
@@ -360,28 +393,60 @@
 
       <article class="case-study case-study--reverse reveal">
         <div class="case-visual">
-          <div class="mockup-frame mockup-frame--case">
-            <div class="mockup-chrome">
-              <div class="mockup-dots"><span></span><span></span><span></span></div>
-              <div class="mockup-url">palestratorino.it</div>
-            </div>
-            <div class="mockup-body mockup-body--gym mockup-body--small">
-              <div class="mockup-nav">
-                <span class="mockup-logo">FORZA<em>TO</em></span>
-                <span class="mockup-navbtn">Iscriviti</span>
-              </div>
-              <div class="mockup-hero mockup-hero--small">
-                <div class="mockup-portrait mockup-portrait--gym" aria-hidden="true">
-                  <div class="portrait-shape shape-1"></div>
-                  <div class="portrait-shape shape-2"></div>
+          <div class="compare" id="compareGym">
+            <div class="compare-after">
+              <div class="mockup-frame mockup-frame--case">
+                <div class="mockup-chrome">
+                  <div class="mockup-dots"><span></span><span></span><span></span></div>
+                  <div class="mockup-url">palestratorino.it</div>
                 </div>
-                <div class="mockup-hero-text">
-                  <span class="mockup-kicker">Palestra · Torino</span>
-                  <span class="mockup-h1">Allenati come<br>nessun altro.</span>
-                  <span class="mockup-cta">Prova gratuita →</span>
+                <div class="mockup-body mockup-body--gym mockup-body--small">
+                  <div class="mockup-nav">
+                    <span class="mockup-logo">FORZA<em>TO</em></span>
+                    <span class="mockup-navbtn">Iscriviti</span>
+                  </div>
+                  <div class="mockup-hero mockup-hero--small">
+                    <div class="mockup-portrait mockup-portrait--gym" aria-hidden="true">
+                      <div class="portrait-shape shape-1"></div>
+                      <div class="portrait-shape shape-2"></div>
+                    </div>
+                    <div class="mockup-hero-text">
+                      <span class="mockup-kicker">Palestra · Torino</span>
+                      <span class="mockup-h1">Allenati come<br>nessun altro.</span>
+                      <span class="mockup-cta">Prova gratuita →</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="compare-before">
+              <div class="mockup-frame mockup-frame--case mockup-frame--before">
+                <div class="mockup-chrome">
+                  <div class="mockup-dots"><span></span><span></span><span></span></div>
+                  <div class="mockup-url">palestraforzatorino.jimdo.com</div>
+                </div>
+                <div class="mockup-body mockup-body--before">
+                  <div class="before-topbar">PALESTRA FORZA TORINO</div>
+                  <div class="before-nav">Home&nbsp;|&nbsp;Corsi&nbsp;|&nbsp;Orari&nbsp;|&nbsp;Come contattarci</div>
+                  <div class="before-content">
+                    <div class="before-photo before-photo--gym" aria-hidden="true"></div>
+                    <div class="before-text">
+                      <p><b>Benvenuti in palestra!</b><br>Corsi di aerobica, pesi, spinning. Orari flessibili e prezzi contenuti per tutti.</p>
+                      <p>Vieni a trovarci in Via Roma 45, Torino</p>
+                      <a href="#" class="before-link" tabindex="-1">Vai alla nostra pagina Facebook</a>
+                    </div>
+                  </div>
+                  <div class="before-footer">© 2012 — Tutti i diritti riservati</div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-handle" aria-hidden="true">
+              <span class="compare-handle-line"></span>
+              <span class="compare-handle-grip">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L3 12l6 6"/><path d="M15 6l6 6-6 6"/></svg>
+              </span>
+            </div>
+            <span class="compare-hint">Trascina per confrontare</span>
           </div>
         </div>
         <div class="case-copy">
@@ -462,7 +527,7 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <a class="logo" href="#top">Della<span class="dot">.</span></a>
+    <a class="logo" href="#top"><img src="public/assets/lockup-white.svg" alt="Della" width="126" height="30"></a>
     <p>© 2026 Della Websites. Siti web per attività locali a Torino &amp; Benevento.</p>
     <div class="footer-links">
       <a href="#servizi">Servizi</a>

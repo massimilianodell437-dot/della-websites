@@ -130,7 +130,7 @@ function formatCount(target, decimals, prefix, suffix) {
   return `${prefix}${target.toFixed(decimals)}${suffix}`;
 }
 
-const heroCountEls = gsap.utils.toArray('[data-count-to]');
+const heroCountEls = gsap.utils.toArray('.hero [data-count-to]');
 heroCountEls.forEach((el) => {
   const decimals = el.dataset.decimals ? parseInt(el.dataset.decimals, 10) : 0;
   el.textContent = formatCount(0, decimals, el.dataset.prefix || '', el.dataset.suffix || '');
@@ -364,34 +364,43 @@ if (planCards.length) {
   }
 }
 
-/* Pricing count-up — scroll-triggered, fires once, ~800ms cubic ease.
-   Separate from the hero's load-triggered stats count-up above. */
-const priceEls = gsap.utils.toArray('.price-num');
+/* Scroll-triggered count-up — fires once, ~800ms cubic ease, for any
+   below-the-fold number (pricing, problem-section stats). Separate
+   from the hero's load-triggered stats count-up above, and reuses the
+   same formatCount helper for consistent prefix/decimals/suffix
+   handling (a stat-num's suffix lives in a sibling <small>, so it's
+   simply omitted from that element's own data attributes). */
+function initScrollCountUp(selector, duration) {
+  gsap.utils.toArray(selector).forEach((el) => {
+    const target = parseFloat(el.dataset.countTo);
+    const decimals = el.dataset.decimals ? parseInt(el.dataset.decimals, 10) : 0;
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    el.textContent = formatCount(0, decimals, prefix, suffix);
 
-priceEls.forEach((el) => {
-  const target = parseFloat(el.dataset.countTo);
-  const prefix = el.dataset.prefix || '';
-  el.textContent = `${prefix}0`;
-
-  ScrollTrigger.create({
-    trigger: el,
-    start: 'top 90%',
-    once: true,
-    onEnter: () => {
-      if (prefersReducedMotion) {
-        el.textContent = `${prefix}${target}`;
-        return;
-      }
-      const proxy = { val: 0 };
-      gsap.to(proxy, {
-        val: target,
-        duration: 0.8,
-        ease: 'power3.out',
-        onUpdate: () => { el.textContent = `${prefix}${Math.round(proxy.val)}`; },
-      });
-    },
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 90%',
+      once: true,
+      onEnter: () => {
+        if (prefersReducedMotion) {
+          el.textContent = formatCount(target, decimals, prefix, suffix);
+          return;
+        }
+        const proxy = { val: 0 };
+        gsap.to(proxy, {
+          val: target,
+          duration,
+          ease: 'power3.out',
+          onUpdate: () => { el.textContent = formatCount(proxy.val, decimals, prefix, suffix); },
+        });
+      },
+    });
   });
-});
+}
+
+initScrollCountUp('.price-num', 0.8);
+initScrollCountUp('.stat-num-count', 0.9);
 
 /* ---------------------------------------------------------------
    How it works — horizontal scroll-scrubbed timeline. The section
@@ -476,12 +485,17 @@ if (processPin && processTrack) {
    un-builds it cleanly rather than just replaying a fixed animation. */
 if (!prefersReducedMotion) {
   gsap.utils.toArray('.case-study').forEach((study) => {
-    const chrome = study.querySelector('.mockup-chrome');
-    const nav = study.querySelector('.mockup-nav');
-    const portrait = study.querySelector('.mockup-portrait');
-    const kicker = study.querySelector('.mockup-kicker');
-    const h1 = study.querySelector('.mockup-h1');
-    const cta = study.querySelector('.mockup-cta');
+    // scoped to .compare-after specifically — the "before" mockup
+    // reuses .mockup-chrome for its own browser-frame look, so an
+    // unscoped query would be one DOM-order accident away from
+    // animating the wrong layer's chrome bar
+    const after = study.querySelector('.compare-after') || study;
+    const chrome = after.querySelector('.mockup-chrome');
+    const nav = after.querySelector('.mockup-nav');
+    const portrait = after.querySelector('.mockup-portrait');
+    const kicker = after.querySelector('.mockup-kicker');
+    const h1 = after.querySelector('.mockup-h1');
+    const cta = after.querySelector('.mockup-cta');
 
     gsap.set([chrome, nav, kicker, h1, cta], { opacity: 0, y: 14 });
     gsap.set(portrait, { opacity: 0, scale: 0.92 });
@@ -501,6 +515,58 @@ if (!prefersReducedMotion) {
       .to(cta, { opacity: 1, y: 0, ease: 'none', duration: 0.18 }, 0.76);
   });
 }
+
+/* ---------------------------------------------------------------
+   Signature interaction — drag-reveal before/after on each portfolio
+   mockup. Pointer Events unify mouse, touch and pen in one listener
+   set, so the same code drives both desktop drag and mobile swipe.
+   Position tracks the pointer 1:1 while dragging — no eased lag, per
+   spec — while the hint label's fade-out uses the site's standard
+   ease. Independent of the construct-piece-by-piece reveal above:
+   that animates opacity/y on the individual pieces inside
+   .compare-after, this animates clip-path on .compare-after itself,
+   so the two never touch the same property. */
+gsap.utils.toArray('.compare').forEach((compare) => {
+  const after = compare.querySelector('.compare-after');
+  const handle = compare.querySelector('.compare-handle');
+  const hint = compare.querySelector('.compare-hint');
+  if (!after || !handle) return;
+
+  let dragging = false;
+  let hintDismissed = false;
+
+  function dismissHint() {
+    if (hintDismissed || !hint) return;
+    hintDismissed = true;
+    hint.classList.add('is-hidden');
+  }
+  const hintTimer = setTimeout(dismissHint, 4000);
+
+  function setPosition(clientX) {
+    const rect = compare.getBoundingClientRect();
+    const pct = gsap.utils.clamp(0, 100, ((clientX - rect.left) / rect.width) * 100);
+    after.style.clipPath = `inset(0 0 0 ${pct}%)`;
+    handle.style.left = `${pct}%`;
+  }
+
+  compare.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    try { compare.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer to capture — drag still tracks via move/up */ }
+    clearTimeout(hintTimer);
+    dismissHint();
+    setPosition(e.clientX);
+  });
+  compare.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    setPosition(e.clientX);
+  });
+  const stopDrag = (e) => {
+    dragging = false;
+    try { if (compare.hasPointerCapture(e.pointerId)) compare.releasePointerCapture(e.pointerId); } catch (err) { /* nothing captured */ }
+  };
+  compare.addEventListener('pointerup', stopDrag);
+  compare.addEventListener('pointercancel', stopDrag);
+});
 
 /* ---------------------------------------------------------------
    Shader background — raw WebGL, no library. Reused for both the hero

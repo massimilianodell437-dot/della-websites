@@ -279,6 +279,7 @@
       </div>
 
     </div>
+    <div class="plan-dots" id="planDots" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -324,19 +325,28 @@
 <!-- ============ PORTFOLIO / DEMO ============ -->
 <section class="portfolio" id="progetti">
   <div class="container">
-    <p class="eyebrow reveal">Progetti dimostrativi</p>
+    <p class="eyebrow reveal">Progetti reali</p>
     <h2 class="section-title">
       <span class="line-mask"><span class="line">Non promesse. <em>Progetti veri</em>,</span></span>
       <span class="line-mask"><span class="line">pensati per vendere.</span></span>
     </h2>
-    <p class="portfolio-note reveal">I tre casi studio qui sotto mostrano qualità e stile del nostro lavoro: un progetto reale e due dimostrativi.</p>
+    <p class="portfolio-note reveal">Un esempio concreto di qualità e stile del nostro lavoro, live in produzione.</p>
 
     <div class="case-studies">
 
       <article class="case-study case-study--travelmap">
         <div class="case-visual reveal-image">
-          <div class="project-shot">
-            <img src="assets/travelmap-screenshot.jpg" alt="Schermata della landing page di TravelMap" loading="lazy" width="1600" height="1000">
+          <div class="project-shot" id="travelmapShot">
+            <div class="shot-slide is-active">
+              <img src="assets/travelmap-3.jpg" alt="Mappa 3D interattiva di TravelMap con le mete visitate e in wishlist" loading="lazy" width="1600" height="1103">
+            </div>
+            <div class="shot-slide">
+              <img src="assets/travelmap-4.jpg" alt="Generatore di itinerari AI di TravelMap con i viaggi salvati" loading="lazy" width="1600" height="1103">
+            </div>
+            <div class="shot-slide">
+              <img src="assets/travelmap-5.jpg" alt="Itinerario di 3 giorni a Roma generato dall'AI di TravelMap, suddiviso giorno per giorno" loading="lazy" width="1203" height="830">
+            </div>
+            <div class="shot-dots" id="travelmapDots" aria-hidden="true"></div>
           </div>
         </div>
         <div class="case-copy reveal">
@@ -352,146 +362,6 @@
           <a href="https://travelmap-liart.vercel.app" target="_blank" rel="noopener" class="btn btn-ghost case-cta">
             Visita il sito ↗
           </a>
-        </div>
-      </article>
-
-      <article class="case-study">
-        <div class="case-visual reveal-image">
-          <div class="compare" id="comparePt">
-            <div class="compare-after">
-              <div class="mockup-frame mockup-frame--case">
-                <div class="mockup-chrome">
-                  <div class="mockup-dots"><span></span><span></span><span></span></div>
-                  <div class="mockup-url">personaltrainer-benevento.it</div>
-                </div>
-                <div class="mockup-body mockup-body--pt mockup-body--small">
-                  <div class="mockup-nav">
-                    <span class="mockup-logo">MARCO<em>FIT</em></span>
-                    <span class="mockup-navbtn">Prenota</span>
-                  </div>
-                  <div class="mockup-hero mockup-hero--small">
-                    <div class="mockup-portrait" aria-hidden="true">
-                      <div class="portrait-shape shape-1"></div>
-                      <div class="portrait-shape shape-2"></div>
-                    </div>
-                    <div class="mockup-hero-text">
-                      <span class="mockup-kicker">Personal Trainer</span>
-                      <span class="mockup-h1">Trasforma<br>il tuo corpo.</span>
-                      <span class="mockup-cta">Prenota →</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="compare-before">
-              <div class="mockup-frame mockup-frame--case mockup-frame--before">
-                <div class="mockup-chrome">
-                  <div class="mockup-dots"><span></span><span></span><span></span></div>
-                  <div class="mockup-url">personaltrainer-benevento.altervista.org</div>
-                </div>
-                <div class="mockup-body mockup-body--before">
-                  <div class="before-topbar">PERSONAL TRAINER BENEVENTO</div>
-                  <div class="before-nav">Home&nbsp;|&nbsp;Chi Sono&nbsp;|&nbsp;Servizi&nbsp;|&nbsp;Contatti</div>
-                  <div class="before-content">
-                    <div class="before-photo" aria-hidden="true"></div>
-                    <div class="before-text">
-                      <p><b>Benvenuti nel sito di Marco!!!</b><br>Personal trainer certificato a Benevento. Se cerchi un allenamento su misura sei nel posto giusto.</p>
-                      <p>Chiamaci al numero <b>0824-XXXXXX</b> per informazioni</p>
-                      <a href="#" class="before-link" tabindex="-1">Clicca qui per contattarmi</a>
-                    </div>
-                  </div>
-                  <div class="before-footer">© 2013 — Sito ottimizzato per Internet Explorer</div>
-                </div>
-              </div>
-            </div>
-            <div class="compare-handle" aria-hidden="true">
-              <span class="compare-handle-line"></span>
-              <span class="compare-handle-grip">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L3 12l6 6"/><path d="M15 6l6 6-6 6"/></svg>
-              </span>
-            </div>
-            <span class="compare-hint">Trascina per confrontare</span>
-          </div>
-        </div>
-        <div class="case-copy reveal">
-          <span class="case-tag">Demo · Progetto dimostrativo</span>
-          <h3>Personal Trainer <em>Benevento</em></h3>
-          <p>Obiettivo: trasformare visite social in prove gratuite prenotate. Sito one-page con CTA diretta a WhatsApp, prova sociale e percorso chiaro in tre scroll.</p>
-          <ul class="case-tags">
-            <li>One-page</li>
-            <li>Prenotazioni WhatsApp</li>
-            <li>Mobile-first</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="case-study case-study--reverse">
-        <div class="case-visual reveal-image">
-          <div class="compare" id="compareGym">
-            <div class="compare-after">
-              <div class="mockup-frame mockup-frame--case">
-                <div class="mockup-chrome">
-                  <div class="mockup-dots"><span></span><span></span><span></span></div>
-                  <div class="mockup-url">palestratorino.it</div>
-                </div>
-                <div class="mockup-body mockup-body--gym mockup-body--small">
-                  <div class="mockup-nav">
-                    <span class="mockup-logo">FORZA<em>TO</em></span>
-                    <span class="mockup-navbtn">Iscriviti</span>
-                  </div>
-                  <div class="mockup-hero mockup-hero--small">
-                    <div class="mockup-portrait mockup-portrait--gym" aria-hidden="true">
-                      <div class="portrait-shape shape-1"></div>
-                      <div class="portrait-shape shape-2"></div>
-                    </div>
-                    <div class="mockup-hero-text">
-                      <span class="mockup-kicker">Palestra · Torino</span>
-                      <span class="mockup-h1">Allenati come<br>nessun altro.</span>
-                      <span class="mockup-cta">Prova gratuita →</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="compare-before">
-              <div class="mockup-frame mockup-frame--case mockup-frame--before">
-                <div class="mockup-chrome">
-                  <div class="mockup-dots"><span></span><span></span><span></span></div>
-                  <div class="mockup-url">palestraforzatorino.jimdo.com</div>
-                </div>
-                <div class="mockup-body mockup-body--before">
-                  <div class="before-topbar">PALESTRA FORZA TORINO</div>
-                  <div class="before-nav">Home&nbsp;|&nbsp;Corsi&nbsp;|&nbsp;Orari&nbsp;|&nbsp;Come contattarci</div>
-                  <div class="before-content">
-                    <div class="before-photo before-photo--gym" aria-hidden="true"></div>
-                    <div class="before-text">
-                      <p><b>Benvenuti in palestra!</b><br>Corsi di aerobica, pesi, spinning. Orari flessibili e prezzi contenuti per tutti.</p>
-                      <p>Vieni a trovarci in Via Roma 45, Torino</p>
-                      <a href="#" class="before-link" tabindex="-1">Vai alla nostra pagina Facebook</a>
-                    </div>
-                  </div>
-                  <div class="before-footer">© 2012 — Tutti i diritti riservati</div>
-                </div>
-              </div>
-            </div>
-            <div class="compare-handle" aria-hidden="true">
-              <span class="compare-handle-line"></span>
-              <span class="compare-handle-grip">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L3 12l6 6"/><path d="M15 6l6 6-6 6"/></svg>
-              </span>
-            </div>
-            <span class="compare-hint">Trascina per confrontare</span>
-          </div>
-        </div>
-        <div class="case-copy reveal">
-          <span class="case-tag">Demo · Progetto dimostrativo</span>
-          <h3>Palestra <em>Torino</em></h3>
-          <p>Obiettivo: comunicare energia e serietà insieme. Layout più strutturato per orari, corsi e abbonamenti, con un'unica call to action sempre visibile.</p>
-          <ul class="case-tags">
-            <li>Presentazione corsi</li>
-            <li>Iscrizioni online</li>
-            <li>Identità forte</li>
-          </ul>
         </div>
       </article>
 

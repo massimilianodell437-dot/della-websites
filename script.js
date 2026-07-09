@@ -414,6 +414,44 @@ if (planCards.length) {
       });
     });
   }
+
+  /* Mobile carousel dot-nav — mirrors the CSS scroll-snap carousel at
+     max-width:899px (see style.css). Native scroll-snap handles the
+     swipe/momentum/snap itself; this just reflects + drives the active
+     dot, so it's a thin sync layer rather than a re-implementation. */
+  const servicesGrid = document.querySelector('.services-grid');
+  const planDots = document.getElementById('planDots');
+  if (servicesGrid && planDots && planCards.length) {
+    planCards.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Vai al piano ${i + 1}`);
+      if (i === 0) dot.classList.add('is-active');
+      dot.addEventListener('click', () => {
+        planCards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      });
+      planDots.appendChild(dot);
+    });
+    const dotEls = Array.from(planDots.children);
+
+    let scrollTicking = false;
+    servicesGrid.addEventListener('scroll', () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        const center = servicesGrid.scrollLeft + servicesGrid.clientWidth / 2;
+        let closest = 0;
+        let closestDist = Infinity;
+        planCards.forEach((card, i) => {
+          const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+          const dist = Math.abs(cardCenter - center);
+          if (dist < closestDist) { closestDist = dist; closest = i; }
+        });
+        dotEls.forEach((d, i) => d.classList.toggle('is-active', i === closest));
+        scrollTicking = false;
+      });
+    }, { passive: true });
+  }
 }
 
 /* Scroll-triggered count-up — fires once, ~800ms cubic ease, for any
@@ -628,6 +666,58 @@ gsap.utils.toArray('.compare').forEach((compare) => {
   compare.addEventListener('pointerup', stopDrag);
   compare.addEventListener('pointercancel', stopDrag);
 });
+
+/* ---------------------------------------------------------------
+   TravelMap screenshot slideshow — real captures of the live app,
+   auto-advancing with a crossfade (ease-reveal, matches the site's
+   scroll-reveal curve rather than inventing a one-off timing), pausing
+   on hover so a visitor can actually look, with clickable dot nav.
+   --------------------------------------------------------------- */
+(() => {
+  const shot = document.getElementById('travelmapShot');
+  const dotsWrap = document.getElementById('travelmapDots');
+  if (!shot || !dotsWrap) return;
+
+  const slides = Array.from(shot.querySelectorAll('.shot-slide'));
+  if (slides.length < 2) return;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('aria-label', `Vai alla schermata ${i + 1}`);
+    if (i === 0) dot.classList.add('is-active');
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+  });
+  const dotEls = Array.from(dotsWrap.children);
+
+  let active = 0;
+  let timer = null;
+
+  function goTo(i) {
+    if (i === active) return;
+    slides[active].classList.remove('is-active');
+    dotEls[active].classList.remove('is-active');
+    active = i;
+    slides[active].classList.add('is-active');
+    dotEls[active].classList.add('is-active');
+  }
+
+  function next() { goTo((active + 1) % slides.length); }
+
+  function play() {
+    if (prefersReducedMotion) return;
+    stop();
+    timer = setInterval(next, 4000);
+  }
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  play();
+  shot.addEventListener('mouseenter', stop);
+  shot.addEventListener('mouseleave', play);
+})();
 
 /* ---------------------------------------------------------------
    Shader background — raw WebGL, no library. Reused for both the hero
@@ -885,10 +975,10 @@ if (canHover && !prefersReducedMotion) {
   const ringWrap = document.getElementById('cursorRingWrap');
 
   if (dotWrap && ringWrap) {
-    const setDotX = gsap.quickTo(dotWrap, 'x', { duration: 0.12, ease: 'easeHover' });
-    const setDotY = gsap.quickTo(dotWrap, 'y', { duration: 0.12, ease: 'easeHover' });
-    const setRingX = gsap.quickTo(ringWrap, 'x', { duration: 0.32, ease: 'easeHover' });
-    const setRingY = gsap.quickTo(ringWrap, 'y', { duration: 0.32, ease: 'easeHover' });
+    const setDotX = gsap.quickTo(dotWrap, 'x', { duration: 0.05, ease: 'easeHover' });
+    const setDotY = gsap.quickTo(dotWrap, 'y', { duration: 0.05, ease: 'easeHover' });
+    const setRingX = gsap.quickTo(ringWrap, 'x', { duration: 0.11, ease: 'easeHover' });
+    const setRingY = gsap.quickTo(ringWrap, 'y', { duration: 0.11, ease: 'easeHover' });
 
     window.addEventListener('mousemove', (e) => {
       setDotX(e.clientX);

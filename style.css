@@ -468,127 +468,56 @@ em { font-style: italic; color: var(--accent-bright); font-family: var(--font-di
     linear-gradient(160deg, #131917 0%, #0B0F0E 100%);
 }
 
-.mockup-nav {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  margin-bottom: 30px;
-}
-.mockup-logo {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.03em;
-  color: var(--text-primary);
-  margin-right: auto;
-}
-.mockup-logo em { font-style: normal; color: var(--accent-bright); }
-.mockup-navlink {
-  font-size: 11.5px;
-  color: var(--text-faint);
-}
-.mockup-navbtn {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--on-accent);
-  background: var(--accent-deep);
-  padding: 7px 14px;
-  border-radius: 999px;
-}
-
-.mockup-hero {
-  display: grid;
-  grid-template-columns: 0.85fr 1fr;
-  gap: 22px;
-  align-items: center;
-  margin-bottom: 26px;
-}
-
-.mockup-portrait {
+/* real-screenshot slideshow — replaces the old fictional-demo mockup
+   content; the chrome (dots + url bar) above stays, only what's inside
+   this box changed. Slides crossfade in place (absolute stack), same
+   pattern as the portfolio's TravelMap slideshow, but arrow-driven
+   instead of autoplaying since this is a manual browse, not a preview
+   loop. object-fit:cover (not contain) — this is meant to read as an
+   actual page filling a browser window, not a framed photo. */
+.mockup-body--shots {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1.05;
-  border-radius: 20px;
-  background: repeating-radial-gradient(circle at 30% 30%, rgba(242,236,224,0.05) 0px, rgba(242,236,224,0.05) 1px, transparent 1px, transparent 8px);
-  background-color: #0d1210;
+  padding: 0;
+  aspect-ratio: 1.55;
   overflow: hidden;
-  border: 1px solid var(--border);
 }
-.portrait-shape { position: absolute; }
-.shape-1 {
-  width: 78%; height: 78%;
-  top: 10%; left: 6%;
-  border-radius: 58% 42% 55% 45% / 55% 45% 60% 40%;
-  background: linear-gradient(140deg, var(--accent-bright) 0%, rgba(79, 191, 170,0.05) 75%);
-  opacity: 0.85;
-  filter: blur(0.4px);
+.hero-shot-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .45s var(--ease-reveal);
 }
-.shape-2 {
-  width: 46%; height: 46%;
-  top: -8%; right: -10%;
-  border-radius: 50%;
-  border: 2px solid var(--accent-bright);
-  opacity: 0.7;
-}
-.shape-3 {
-  width: 16%; height: 16%;
-  bottom: 10%; left: 12%;
-  border-radius: 50%;
-  background: var(--text-primary);
-  opacity: 0.85;
-}
-.mockup-portrait--gym .shape-1 {
-  border-radius: 12px;
-  background: linear-gradient(150deg, var(--accent-bright) 0%, rgba(79, 191, 170,0.04) 80%);
-  transform: rotate(-4deg);
-}
-.mockup-portrait--gym .shape-2 {
-  border-radius: 12px;
-  border-color: var(--accent-bright);
-  transform: rotate(10deg);
+.hero-shot-slide.is-active { opacity: 1; }
+.hero-shot-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.mockup-hero-text {
+.hero-shot-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 34px; height: 34px;
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.mockup-kicker {
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent-bright);
-  font-weight: 600;
-}
-.mockup-h1 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 22px;
-  line-height: 1.1;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 15, 14, 0.55);
+  border: 1px solid rgba(247, 246, 242, 0.18);
   color: var(--text-primary);
+  backdrop-filter: blur(6px);
+  transition: background .25s var(--ease-hover), border-color .25s var(--ease-hover), color .25s var(--ease-hover);
 }
-.mockup-p {
-  font-size: 12px;
-  color: var(--text-dim);
-  max-width: 220px;
+.hero-shot-arrow:hover {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: var(--bg-primary);
 }
-.mockup-cta {
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--accent-bright);
-}
-
-.mockup-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-}
-.mockup-stats div { display: flex; flex-direction: column; gap: 2px; }
-.mockup-stats b { font-family: var(--font-display); font-size: 16px; color: var(--text-primary); }
-.mockup-stats small { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); }
+.hero-shot-arrow--prev { left: 12px; }
+.hero-shot-arrow--next { right: 12px; }
 
 .floating-badge {
   position: absolute;
@@ -602,8 +531,6 @@ em { font-style: italic; color: var(--accent-bright); font-family: var(--font-di
   border-radius: 14px;
   box-shadow: 0 16px 40px -12px rgba(0,0,0,0.6);
 }
-.badge-1 { top: -22px; right: -22px; }
-.badge-num { font-family: var(--font-display); font-weight: 700; color: var(--accent-bright); font-size: 1.05rem; }
 .badge-label { font-size: 0.72rem; color: var(--text-dim); max-width: 90px; line-height: 1.25; }
 .badge-2 { bottom: -22px; left: -22px; }
 .badge-dot {
@@ -866,9 +793,12 @@ section { position: relative; padding: 130px 0; }
   box-shadow: 0 34px 64px -20px rgba(0,0,0,0.6);
 }
 
+/* sits in normal flow (not absolutely positioned over the border) —
+   .plan-card has overflow:hidden for the specular-highlight effect and
+   rounded corners, which was clipping the badge whenever it overlapped
+   the top edge */
 .plan-badge {
-  position: absolute;
-  top: -14px; left: 32px;
+  display: inline-block;
   background: var(--accent-bright);
   color: var(--bg-primary);
   font-size: 0.76rem;
@@ -876,6 +806,7 @@ section { position: relative; padding: 130px 0; }
   padding: 6px 16px;
   border-radius: 999px;
   letter-spacing: 0.02em;
+  margin-bottom: 20px;
 }
 
 .plan-head h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }

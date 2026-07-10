@@ -653,6 +653,36 @@ gsap.utils.toArray('.compare').forEach((compare) => {
 })();
 
 /* ---------------------------------------------------------------
+   Hero mockup slideshow — real TravelMap screenshots inside the
+   browser-chrome frame, browsed manually via prev/next arrows (no
+   autoplay: this is a deliberate look, not a preview loop). Same
+   crossfade mechanics as the portfolio slideshow, loops in both
+   directions.
+   --------------------------------------------------------------- */
+(() => {
+  const shot = document.getElementById('heroShotBody');
+  if (!shot) return;
+
+  const slides = Array.from(shot.querySelectorAll('.hero-shot-slide'));
+  const prevBtn = shot.querySelector('.hero-shot-arrow--prev');
+  const nextBtn = shot.querySelector('.hero-shot-arrow--next');
+  if (slides.length < 2 || !prevBtn || !nextBtn) return;
+
+  let active = slides.findIndex((s) => s.classList.contains('is-active'));
+  if (active < 0) active = 0;
+
+  function goTo(i) {
+    if (i === active) return;
+    slides[active].classList.remove('is-active');
+    active = i;
+    slides[active].classList.add('is-active');
+  }
+
+  nextBtn.addEventListener('click', () => goTo((active + 1) % slides.length));
+  prevBtn.addEventListener('click', () => goTo((active - 1 + slides.length) % slides.length));
+})();
+
+/* ---------------------------------------------------------------
    Shader background — raw WebGL, no library. Reused for both the hero
    (full strength) and the contact section (low intensity, via a
    dimmer CSS opacity on that canvas — conversion is the job there,

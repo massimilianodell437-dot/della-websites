@@ -110,6 +110,17 @@ CustomEase.create('easeReveal', '0.16, 1, 0.3, 1');
 CustomEase.create('easeHover', '0.65, 0, 0.35, 1');
 CustomEase.create('easeTransition', '0.83, 0, 0.17, 1');
 
+/* Piazzolla (the display serif used in every heading) loads async via
+   Google Fonts — if it swaps in after ScrollTrigger has already measured
+   trigger positions off the fallback font's metrics, everything below
+   the fold can reflow and throw those positions off until something
+   forces a recalculation. Refresh once fonts and the full page (images
+   included) have actually settled, so trigger points reflect final layout. */
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => ScrollTrigger.refresh());
+}
+window.addEventListener('load', () => ScrollTrigger.refresh());
+
 if (!prefersReducedMotion) {
   const lenis = new Lenis({
     duration: 1.15,
@@ -603,8 +614,10 @@ gsap.utils.toArray('.compare').forEach((compare) => {
 /* ---------------------------------------------------------------
    TravelMap screenshot slideshow — real captures of the live app,
    auto-advancing with a crossfade (ease-reveal, matches the site's
-   scroll-reveal curve rather than inventing a one-off timing), pausing
-   on hover so a visitor can actually look, with clickable dot nav.
+   scroll-reveal curve rather than inventing a one-off timing) until
+   the visitor takes over: dots, arrows, or a touch swipe all count as
+   manual navigation and permanently stop autoplay rather than having
+   it resume later and fight whatever the visitor just chose.
    --------------------------------------------------------------- */
 (() => {
   const shot = document.getElementById('travelmapShot');
@@ -614,18 +627,22 @@ gsap.utils.toArray('.compare').forEach((compare) => {
   const slides = Array.from(shot.querySelectorAll('.shot-slide'));
   if (slides.length < 2) return;
 
+  const prevBtn = shot.querySelector('.hero-shot-arrow--prev');
+  const nextBtn = shot.querySelector('.hero-shot-arrow--next');
+
   slides.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.type = 'button';
     dot.setAttribute('aria-label', `Vai alla schermata ${i + 1}`);
     if (i === 0) dot.classList.add('is-active');
-    dot.addEventListener('click', () => goTo(i));
+    dot.addEventListener('click', () => { goTo(i); stopForGood(); });
     dotsWrap.appendChild(dot);
   });
   const dotEls = Array.from(dotsWrap.children);
 
   let active = 0;
   let timer = null;
+  let userTookOver = false;
 
   function goTo(i) {
     if (i === active) return;
@@ -637,15 +654,38 @@ gsap.utils.toArray('.compare').forEach((compare) => {
   }
 
   function next() { goTo((active + 1) % slides.length); }
+  function prev() { goTo((active - 1 + slides.length) % slides.length); }
 
   function play() {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || userTookOver) return;
     stop();
     timer = setInterval(next, 4000);
   }
   function stop() {
     if (timer) { clearInterval(timer); timer = null; }
   }
+  function stopForGood() {
+    userTookOver = true;
+    stop();
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => { prev(); stopForGood(); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { next(); stopForGood(); });
+
+  // touch swipe — left/right, a modest threshold so it doesn't fire on
+  // an incidental tap or a mostly-vertical scroll gesture
+  let touchStartX = null;
+  shot.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  shot.addEventListener('touchend', (e) => {
+    if (touchStartX == null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0) next(); else prev();
+    stopForGood();
+  }, { passive: true });
 
   play();
   shot.addEventListener('mouseenter', stop);

@@ -583,8 +583,15 @@ section { position: relative; padding: 130px 0; }
 /* ==========================================================================
    Problem
    ========================================================================== */
+/* two glow layers, not one — this section runs much taller than the
+   other glowing sections (pinned statement + stats grid + cause cards
+   stacked), so a single centered ellipse calibrated for a
+   shorter section left the causes area flat and glow-less */
 .problem {
-  background: radial-gradient(ellipse 55% 55% at 50% 40%, rgba(79, 191, 170, 0.06), transparent 70%), var(--bg-soft);
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 20%, rgba(79, 191, 170, 0.065), transparent 70%),
+    radial-gradient(ellipse 65% 50% at 50% 85%, rgba(79, 191, 170, 0.055), transparent 70%),
+    var(--bg-soft);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -893,6 +900,9 @@ section { position: relative; padding: 130px 0; }
 /* ==========================================================================
    Portfolio
    ========================================================================== */
+.portfolio {
+  background: radial-gradient(ellipse 55% 55% at 50% 45%, rgba(79, 191, 170, 0.06), transparent 70%);
+}
 .portfolio-note {
   color: var(--text-faint);
   font-size: 0.95rem;
@@ -1002,7 +1012,7 @@ section { position: relative; padding: 130px 0; }
 
 .case-cta {
   display: inline-flex;
-  margin-top: 4px;
+  margin-top: 28px;
 }
 
 .compare-after,

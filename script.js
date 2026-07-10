@@ -147,18 +147,15 @@ if (!prefersReducedMotion) {
 
    Order: brief hold on bg-primary -> logo clip-path wipe -> nav items
    stagger in -> headline reveals word-by-word (up + slight rotation,
-   settling to 0) -> the shader ramps in underneath that same reveal
-   (not before it), so the text feels like it's arriving into an
-   already-alive environment rather than the environment arriving after. */
+   settling to 0) -> supporting copy and the mockup follow. */
 gsap.set('.logo img', { clipPath: 'inset(0 100% 0 0)' });
 gsap.set('#navLinks a, .nav-cta', { opacity: 0, y: 10 });
-gsap.set('.eyebrow[data-hero-el]', { opacity: 0, y: 16 });
+gsap.set('.hero-kicker', { opacity: 0, y: 16 });
 gsap.set('.hero-sub', { opacity: 0, y: 20 });
 gsap.set('.hero-actions', { opacity: 0, y: 20 });
 gsap.set('.hero-meta', { opacity: 0, y: 16 });
 gsap.set('.hero-visual', { opacity: 0, x: 40 });
 gsap.set('.floating-badge', { opacity: 0, y: 14, scale: 0.9 });
-if (!prefersReducedMotion) gsap.set('#heroCanvas', { opacity: 0 });
 
 /* Split the two headline lines into words so each one can animate up
    with its own slight rotation. Falls back to a plain reveal of the
@@ -217,12 +214,9 @@ heroTl
   .to('.logo img', { clipPath: 'inset(0 0% 0 0)', duration: 0.4 })
   // 3. nav items stagger in, 60ms apart, overlapping the tail of the wipe
   .to('#navLinks a, .nav-cta', { opacity: 1, y: 0, duration: 0.25, stagger: 0.06 }, '-=0.25')
-  .to('.eyebrow[data-hero-el]', { opacity: 1, y: 0, duration: 0.4 }, '-=0.3')
+  .to('.hero-kicker', { opacity: 1, y: 0, duration: 0.4 }, '-=0.3')
   // 4. headline reveals word-by-word: up + slight rotation settling to 0
   .to(heroWords, { opacity: 1, yPercent: 0, rotate: 0, duration: 0.5, stagger: 0.025 }, '-=0.2')
-  // 5. the shader ramps in at the exact same moment the headline starts
-  //    revealing (never before it) — arriving into an already-alive scene
-  .to('#heroCanvas', { opacity: 1, duration: 0.9 }, '<')
   .to('.hero-sub', { y: 0, opacity: 1, duration: 0.6 }, '-=0.25')
   .to('.hero-actions', { y: 0, opacity: 1, duration: 0.6 }, '-=0.4')
   .to('.hero-meta', { y: 0, opacity: 1, duration: 0.5 }, '-=0.45')
@@ -282,10 +276,8 @@ const problemPin = document.getElementById('problemPin');
 if (problemPin && !prefersReducedMotion) {
   const problemStatement = problemPin.querySelector('.statement--problem');
   const solutionStatement = problemPin.querySelector('.statement--solution');
-  const problemEyebrow = problemPin.querySelector('.statement-eyebrow--problem');
-  const solutionEyebrow = problemPin.querySelector('.statement-eyebrow--solution');
 
-  gsap.set([solutionStatement, solutionEyebrow], { opacity: 0, y: 40 });
+  gsap.set(solutionStatement, { opacity: 0, y: 40 });
 
   const dissolveTl = gsap.timeline({
     scrollTrigger: {
@@ -299,9 +291,7 @@ if (problemPin && !prefersReducedMotion) {
   });
 
   dissolveTl
-    .to(problemEyebrow, { opacity: 0, y: -14, ease: 'none', duration: 0.5 }, 0)
     .to(problemStatement, { opacity: 0, y: -50, ease: 'none', duration: 0.5 }, 0)
-    .to(solutionEyebrow, { opacity: 1, y: 0, ease: 'none', duration: 0.5 }, 0.3)
     .to(solutionStatement, { opacity: 1, y: 0, ease: 'none', duration: 0.5 }, 0.3);
 }
 
@@ -322,24 +312,10 @@ if (mockupWrap && canHover && !prefersReducedMotion) {
   });
 }
 
-/* Depth parallax as the user scrolls out of the hero: the shader
-   background is translated downward by a fraction of the scroll
-   distance, which partially cancels its native upward scroll motion —
-   so it visibly moves slower than the foreground and reads as farther
-   away. hero-copy scrolls at the normal (native) rate as the middle
-   plane; hero-visual gets an extra push, reading as the closest plane. */
+/* Depth parallax as the user scrolls out of the hero: hero-copy scrolls
+   at the normal (native) rate as the middle plane; hero-visual gets an
+   extra push, reading as the closest plane. */
 if (!prefersReducedMotion) {
-  gsap.to('#heroCanvas', {
-    y: 160,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true,
-    },
-  });
-
   gsap.to('.hero-visual', {
     y: 60,
     ease: 'none',
@@ -394,15 +370,13 @@ if (planCards.length) {
 
       // tilt tracks the cursor's exact position within THIS card's own
       // bounds (classic tilt-card technique) — not a grid-wide proximity
-      // field. Also drives the CSS specular-highlight position via --mx/--my.
+      // field.
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const px = (e.clientX - rect.left) / rect.width;
         const py = (e.clientY - rect.top) / rect.height;
         setRotateY((px - 0.5) * 2 * TILT_MAX);
         setRotateX(-(py - 0.5) * 2 * TILT_MAX);
-        card.style.setProperty('--mx', `${px * 100}%`);
-        card.style.setProperty('--my', `${py * 100}%`);
       });
 
       card.addEventListener('mouseenter', () => setScale(baseScale * 1.02));
@@ -721,210 +695,6 @@ gsap.utils.toArray('.compare').forEach((compare) => {
   nextBtn.addEventListener('click', () => goTo((active + 1) % slides.length));
   prevBtn.addEventListener('click', () => goTo((active - 1 + slides.length) % slides.length));
 })();
-
-/* ---------------------------------------------------------------
-   Shader background — raw WebGL, no library. Reused for both the hero
-   (full strength) and the contact section (low intensity, via a
-   dimmer CSS opacity on that canvas — conversion is the job there,
-   not spectacle). Continuously drifts on its own (uTime) so it never
-   reads as a still image, and warps toward the cursor (uMouse) for an
-   unmistakable, physically-reactive feel. Freezes to one static frame
-   under prefers-reduced-motion, and pauses its render loop while its
-   section is scrolled out of view.
-   --------------------------------------------------------------- */
-function initShaderBackground(canvasId, sectionSelector) {
-  const canvas = document.getElementById(canvasId);
-  const heroSection = document.querySelector(sectionSelector);
-  if (!canvas || !heroSection) return;
-
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  if (!gl) return;
-
-  const vertexSrc = `
-    attribute vec2 aPosition;
-    void main() {
-      gl_Position = vec4(aPosition, 0.0, 1.0);
-    }
-  `;
-
-  const fragmentSrc = `
-    precision highp float;
-    uniform float uTime;
-    uniform vec2 uResolution;
-    uniform vec2 uMouse;
-    uniform float uMotion;
-
-    vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-    vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-    vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
-
-    float snoise(vec2 v) {
-      const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                          -0.577350269189626, 0.024390243902439);
-      vec2 i  = floor(v + dot(v, C.yy));
-      vec2 x0 = v - i + dot(i, C.xx);
-      vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-      vec4 x12 = x0.xyxy + C.xxzz;
-      x12.xy -= i1;
-      i = mod289(i);
-      vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-      vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
-      m = m * m;
-      m = m * m;
-      vec3 x = 2.0 * fract(p * C.www) - 1.0;
-      vec3 h = abs(x) - 0.5;
-      vec3 ox = floor(x + 0.5);
-      vec3 a0 = x - ox;
-      m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-      vec3 g;
-      g.x = a0.x * x0.x + h.x * x0.y;
-      g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-      return 130.0 * dot(m, g);
-    }
-
-    void main() {
-      vec2 uv = gl_FragCoord.xy / uResolution.xy;
-      float aspect = uResolution.x / uResolution.y;
-      vec2 auv = vec2(uv.x * aspect, uv.y);
-
-      float t = uTime * 0.045 * uMotion;
-      vec2 mouseOffset = (uMouse - 0.5) * 2.0 * uMotion;
-
-      vec2 p = auv * 1.9 + mouseOffset * 0.55;
-
-      float n1 = snoise(p + vec2(t, -t * 0.7));
-      float n2 = snoise(p * 1.6 - vec2(t * 0.5, t * 0.9) + 4.2);
-      float n = n1 * 0.6 + n2 * 0.4;
-      n = n * 0.5 + 0.5;
-
-      float lightN = snoise(p * 1.1 - vec2(t * 0.25, t * 0.35) + 91.0);
-      lightN = lightN * 0.5 + 0.5;
-
-      /* two-accent system only, matching the CSS palette exactly */
-      vec3 bg = vec3(0.0431, 0.0588, 0.0549);          /* --bg-primary */
-      vec3 accentDeep = vec3(0.0039, 0.4118, 0.4353);  /* --accent-deep */
-      vec3 accentBright = vec3(0.3098, 0.7490, 0.6667); /* --accent-bright */
-
-      vec3 col = bg;
-      col = mix(col, accentDeep, smoothstep(0.40, 0.80, n));
-      col = mix(col, accentBright, smoothstep(0.80, 1.02, n) * 0.5);
-      col = mix(col, accentBright, smoothstep(0.64, 0.92, lightN) * 0.16);
-
-      /* concentrate the glow around the mockup on the right; fall to
-         near-pure background on the left where the headline sits */
-      vec2 vc = auv - vec2(aspect * 0.6, 0.4);
-      float vig = smoothstep(1.05, 0.05, length(vc));
-      col = mix(bg, col, vig);
-
-      gl_FragColor = vec4(col, 1.0);
-    }
-  `;
-
-  function compile(type, src) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, src);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      console.warn('Hero shader compile error:', gl.getShaderInfoLog(shader));
-      gl.deleteShader(shader);
-      return null;
-    }
-    return shader;
-  }
-
-  const vertexShader = compile(gl.VERTEX_SHADER, vertexSrc);
-  const fragmentShader = compile(gl.FRAGMENT_SHADER, fragmentSrc);
-  if (!vertexShader || !fragmentShader) return;
-
-  const program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.warn('Hero shader link error:', gl.getProgramInfoLog(program));
-    return;
-  }
-  gl.useProgram(program);
-
-  const positions = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-
-  const aPosition = gl.getAttribLocation(program, 'aPosition');
-  gl.enableVertexAttribArray(aPosition);
-  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-
-  const uTimeLoc = gl.getUniformLocation(program, 'uTime');
-  const uResolutionLoc = gl.getUniformLocation(program, 'uResolution');
-  const uMouseLoc = gl.getUniformLocation(program, 'uMouse');
-  const uMotionLoc = gl.getUniformLocation(program, 'uMotion');
-
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  let width = 0;
-  let height = 0;
-
-  function resize() {
-    const rect = heroSection.getBoundingClientRect();
-    width = Math.max(1, Math.round(rect.width * dpr));
-    height = Math.max(1, Math.round(rect.height * dpr));
-    canvas.width = width;
-    canvas.height = height;
-    gl.viewport(0, 0, width, height);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const mouseTarget = { x: 0.5, y: 0.5 };
-  const mouseCurrent = { x: 0.5, y: 0.5 };
-
-  if (canHover) {
-    heroSection.addEventListener('mousemove', (e) => {
-      const rect = heroSection.getBoundingClientRect();
-      mouseTarget.x = (e.clientX - rect.left) / rect.width;
-      mouseTarget.y = 1 - (e.clientY - rect.top) / rect.height;
-    });
-  }
-
-  const motion = prefersReducedMotion ? 0 : 1;
-  const startTime = performance.now();
-  let rafId = null;
-  let visible = true;
-
-  function render(now) {
-    const elapsed = (now - startTime) / 1000;
-    mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.06;
-    mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * 0.06;
-
-    gl.uniform1f(uTimeLoc, elapsed);
-    gl.uniform2f(uResolutionLoc, width, height);
-    gl.uniform2f(uMouseLoc, mouseCurrent.x, mouseCurrent.y);
-    gl.uniform1f(uMotionLoc, motion);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-    if (motion) rafId = requestAnimationFrame(render);
-  }
-
-  render(performance.now());
-
-  if (motion) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !visible) {
-          visible = true;
-          rafId = requestAnimationFrame(render);
-        } else if (!entry.isIntersecting && visible) {
-          visible = false;
-          if (rafId) cancelAnimationFrame(rafId);
-        }
-      });
-    }, { threshold: 0 });
-    observer.observe(heroSection);
-  }
-}
-
-initShaderBackground('heroCanvas', '.hero');
-initShaderBackground('contactCanvas', '.contact');
 
 /* ---------------------------------------------------------------
    Magnetic CTAs — every primary button pulls gently toward the

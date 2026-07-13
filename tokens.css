@@ -1,0 +1,61 @@
+/* ==========================================================================
+   Della Websites — design tokens
+   Shared across every page. Palette: near-black canvas, brand teal, brass
+   accent. Studio-grade, understated — the design itself is the pitch.
+   ========================================================================== */
+
+:root {
+  /* ---------- surface ---------- */
+  --ink: #0b0d0c;           /* page background */
+  --ink-soft: #101312;      /* banded sections, one step up from --ink */
+  --surface: #14211f;       /* raised panel surface (cards) */
+  --surface-2: #182422;     /* nested panels inside a surface */
+  --border: rgba(243, 239, 230, 0.10);
+  --border-strong: rgba(243, 239, 230, 0.22);
+
+  /* ---------- text ---------- */
+  --paper: #f3efe6;         /* primary text on dark */
+  --text-primary: var(--paper);
+  --text-dim: rgba(243, 239, 230, 0.72);
+  --text-faint: rgba(243, 239, 230, 0.48);
+
+  /* ---------- accents ----------
+     brass carries interaction (CTAs, cursor, progress, prices);
+     teal is the established brand mark — case-study tags, emphasis,
+     footer contact links. Two accents, each with one clear job. */
+  --brass: #c7a84b;
+  --brass-deep: #a3853a;
+  --teal: #4fd1c5;
+  --teal-deep: #2f9c92;
+  --accent-glass: rgba(199, 168, 75, 0.08);
+  --accent-glass-strong: rgba(199, 168, 75, 0.18);
+  --on-accent: var(--ink);
+
+  /* legacy aliases — every existing var() reference across the
+     stylesheet keeps resolving without a rewrite of every rule */
+  --bg-primary: var(--ink);
+  --bg-soft: var(--ink-soft);
+  --bg-elevated: var(--surface);
+  --bg-elevated-2: var(--surface-2);
+  --accent-deep: var(--brass-deep);
+  --accent-bright: var(--brass);
+  --cotto: var(--brass);
+  --cotto-scuro: var(--brass-deep);
+  --ulivo: var(--teal);
+  --ulivo-scuro: var(--teal);
+
+  --container: 1240px;
+  --radius-lg: 4px;
+  --radius-md: 3px;
+  --radius-sm: 2px;
+
+  --font-display: 'Fraunces', 'Iowan Old Style', serif;
+  --font-body: 'Archivo', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
+
+  /* named motion system — every transition uses one of these three,
+     never an ad hoc ease-in-out */
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);      /* scroll reveals, page-load elements: fast start, long soft landing */
+  --ease-hover: cubic-bezier(0.65, 0, 0.35, 1);      /* hover/interaction states: symmetric, snappy */
+  --ease-transition: cubic-bezier(0.83, 0, 0.17, 1); /* page/section transitions: dramatic accelerate-decelerate */
+}

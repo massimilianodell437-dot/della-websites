@@ -734,3 +734,66 @@ if (canHover && !prefersReducedMotion) {
   });
 }
 
+/* ---------------------------------------------------------------
+   Custom cursor — a small brass dot that lags the pointer slightly
+   (gsap.ticker lerp, not 1:1) and morphs into a labelled pill over
+   any [data-cursor] element. Desktop-with-a-mouse only: gated on the
+   same canHover check as the magnetic buttons above, so touch
+   devices never load this and reduced-motion visitors keep the
+   native cursor entirely.
+   --------------------------------------------------------------- */
+const cursorEl = document.getElementById('cursor');
+const cursorLabel = document.getElementById('cursorLabel');
+
+if (cursorEl && canHover && !prefersReducedMotion) {
+  document.body.classList.add('custom-cursor');
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let cursorX = 0;
+  let cursorY = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  gsap.ticker.add(() => {
+    cursorX += (mouseX - cursorX) * 0.18;
+    cursorY += (mouseY - cursorY) * 0.18;
+    gsap.set(cursorEl, { x: cursorX, y: cursorY, xPercent: -50, yPercent: -50 });
+  });
+
+  document.querySelectorAll('[data-cursor]').forEach((el) => {
+    el.addEventListener('mouseenter', () => {
+      cursorEl.classList.add('is-active');
+      cursorLabel.textContent = el.dataset.cursor;
+    });
+    el.addEventListener('mouseleave', () => {
+      cursorEl.classList.remove('is-active');
+    });
+  });
+}
+
+/* ---------------------------------------------------------------
+   Contact underline draw — the accent stroke under "Parliamone."
+   draws in once on arrival, same ease-reveal curve as every other
+   scroll reveal on the page rather than a one-off timing.
+   --------------------------------------------------------------- */
+const contactUnderline = document.getElementById('contactUnderline');
+if (contactUnderline) {
+  if (prefersReducedMotion) {
+    contactUnderline.style.strokeDashoffset = 0;
+  } else {
+    const underlineLength = contactUnderline.getTotalLength();
+    contactUnderline.style.strokeDasharray = underlineLength;
+    contactUnderline.style.strokeDashoffset = underlineLength;
+    gsap.to(contactUnderline, {
+      strokeDashoffset: 0,
+      duration: 1.3,
+      ease: 'easeReveal',
+      scrollTrigger: { trigger: '.contact', start: 'top 60%', once: true },
+    });
+  }
+}
+

@@ -1,8 +1,9 @@
 /* ==========================================================================
    Della Websites — stylesheet
    Palette + type + motion tokens live in tokens.css (shared across every
-   page). Near-black canvas, brand teal, brass accent — studio-grade,
-   understated. This file is component/layout rules only.
+   page). Warm white / full black bands with a dark Italian-flag green
+   accent — sections alternate light/dark via [data-band] on tokens.css.
+   This file is component/layout rules only.
    ========================================================================== */
 
 /* ---------- reset ---------- */
@@ -84,7 +85,10 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   top: 0; left: 0; bottom: 0;
   width: 3px;
   z-index: 1000;
-  background: rgba(243, 239, 230, 0.07);
+  /* neutral mid-gray, not tied to either band's ink color — this fixed
+     overlay runs the full height of the page over alternating white/black
+     sections, so it can't lean on --border (which flips per band) */
+  background: rgba(128, 128, 128, 0.28);
   pointer-events: none;
 }
 .scroll-progress span {
@@ -92,16 +96,16 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   width: 100%;
   height: 0%;
   background: linear-gradient(180deg, var(--accent-bright), var(--accent-deep));
-  box-shadow: 0 0 12px rgba(199, 168, 75, 0.35);
+  box-shadow: 0 0 12px rgba(27, 94, 58, 0.35);
   transition: box-shadow .4s var(--ease-hover);
 }
 .scroll-progress span.is-pulsing {
   animation: progress-pulse 0.9s var(--ease-hover);
 }
 @keyframes progress-pulse {
-  0%   { box-shadow: 0 0 12px rgba(199, 168, 75, 0.35); }
-  35%  { box-shadow: 0 0 24px 5px rgba(199, 168, 75, 0.8); }
-  100% { box-shadow: 0 0 12px rgba(199, 168, 75, 0.35); }
+  0%   { box-shadow: 0 0 12px rgba(27, 94, 58, 0.35); }
+  35%  { box-shadow: 0 0 24px 5px rgba(27, 94, 58, 0.8); }
+  100% { box-shadow: 0 0 12px rgba(27, 94, 58, 0.35); }
 }
 @media (prefers-reduced-motion: reduce) {
   .scroll-progress span.is-pulsing { animation: none; }
@@ -111,16 +115,27 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
 /* ==========================================================================
    Navbar
    ========================================================================== */
+/* The navbar floats over every band as the page scrolls beneath it, so it
+   can't inherit a section's [data-band] text colors — it isn't inside any
+   section. It's pinned to always read as light-on-dark instead: a
+   permanent soft scrim (not just on .is-scrolled) keeps it legible over a
+   light band underneath, and the opaque scrolled state stays legible too. */
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 900;
   padding: 20px 0;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.4), transparent);
   transition: background .4s var(--ease-hover), border-color .4s var(--ease-hover);
   border-bottom: 1px solid transparent;
+  --text-primary: var(--text-on-dark);
+  --text-dim: var(--text-on-dark-dim);
+  --text-faint: var(--text-on-dark-faint);
+  --border: var(--border-on-dark);
+  --border-strong: var(--border-on-dark-strong);
 }
 .navbar.is-scrolled {
-  background: rgba(11, 13, 12, 0.82);
+  background: rgba(10, 10, 10, 0.86);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
@@ -173,7 +188,7 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   background: transparent;
   border: 1px solid var(--accent-bright);
   color: var(--accent-bright);
@@ -182,14 +197,14 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  box-shadow: 0 0 0 0 rgba(199, 168, 75, 0);
+  box-shadow: 0 0 0 0 rgba(27, 94, 58, 0);
   transition: transform .3s var(--ease-hover), background .3s var(--ease-hover), color .3s var(--ease-hover), box-shadow .4s var(--ease-hover);
 }
 .nav-cta:hover {
   background: var(--accent-bright);
   color: var(--on-accent);
   transform: translateY(-1px);
-  box-shadow: 0 0 30px 8px rgba(199, 168, 75, 0.35);
+  box-shadow: 0 0 30px 8px rgba(27, 94, 58, 0.35);
 }
 
 .nav-toggle {
@@ -222,7 +237,7 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   justify-content: center;
   gap: 10px;
   padding: 16px 26px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 0.78rem;
@@ -236,20 +251,20 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   background: var(--accent-bright);
   color: var(--on-accent);
   border-color: var(--accent-bright);
-  box-shadow: 0 0 0 0 rgba(199, 168, 75, 0);
+  box-shadow: 0 0 0 0 rgba(27, 94, 58, 0);
 }
 .btn-primary:hover {
   background: var(--accent-deep);
   border-color: var(--accent-deep);
   color: var(--on-accent);
   transform: translateY(-2px);
-  box-shadow: 0 0 60px 16px rgba(199, 168, 75, 0.35);
+  box-shadow: 0 0 60px 16px rgba(27, 94, 58, 0.35);
 }
 
 /* the conversion CTA — strongest glow + magnetic pull (JS) on the site */
 .btn-magnetic { transition: background .35s var(--ease-hover), border-color .35s var(--ease-hover), color .35s var(--ease-hover), box-shadow .5s var(--ease-hover); }
 .btn-magnetic:hover {
-  box-shadow: 0 0 90px 26px rgba(199, 168, 75, 0.5);
+  box-shadow: 0 0 90px 26px rgba(27, 94, 58, 0.5);
 }
 .btn-ghost {
   background: transparent;
@@ -289,14 +304,15 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   overflow: hidden;
 }
 
-/* near-black canvas with one restrained brass glow, same language as
-   every other section — no shader here: motion carries the drama
-   (word reveal, cursor, magnetic CTA), the backdrop stays quiet */
+/* decorative glow only — background-image (not the background shorthand)
+   so it layers on top of the section[data-band] fill instead of
+   replacing it; motion carries the drama (word reveal, cursor, magnetic
+   CTA), the backdrop stays quiet */
 .hero-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(ellipse 65% 60% at 68% 40%, var(--accent-glass-strong), transparent 70%), var(--bg-primary);
+  background-image: radial-gradient(ellipse 65% 60% at 68% 40%, var(--accent-glass-strong), transparent 70%);
 }
 
 .hero-inner {
@@ -388,9 +404,18 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   box-shadow:
     0 30px 70px -20px rgba(0, 0, 0, 0.28),
     0 10px 30px -10px rgba(0, 0, 0, 0.18),
-    0 0 0 1px rgba(199, 168, 75, 0.06);
+    0 0 0 1px rgba(27, 94, 58, 0.06);
   transform: rotateY(-8deg) rotateX(3deg);
   will-change: transform;
+  /* always a dark nero-soft surface (--bg-elevated-2) regardless of the
+     band it sits in — pin its own text/border vars to match, don't
+     inherit the enclosing section's band */
+  color: var(--text-on-dark);
+  --text-primary: var(--text-on-dark);
+  --text-dim: var(--text-on-dark-dim);
+  --text-faint: var(--text-on-dark-faint);
+  --border: var(--border-on-dark);
+  --border-strong: var(--border-on-dark-strong);
 }
 
 .mockup-chrome {
@@ -424,7 +449,7 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
 .mockup-body {
   padding: 30px 30px 26px;
   background:
-    radial-gradient(ellipse 120% 100% at 100% 0%, rgba(199, 168, 75, 0.09), transparent 55%),
+    radial-gradient(ellipse 120% 100% at 100% 0%, rgba(27, 94, 58, 0.09), transparent 55%),
     linear-gradient(160deg, #131917 0%, #0B0F0E 100%);
 }
 
@@ -489,8 +514,15 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   padding: 12px 16px;
   background: var(--bg-elevated);
   border: 1px solid var(--border-strong);
-  border-radius: 14px;
-  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.22);
+  border-radius: 999px;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  /* always a light bianco-soft surface (--bg-elevated) regardless of band */
+  color: var(--text-on-light);
+  --text-primary: var(--text-on-light);
+  --text-dim: var(--text-on-light-dim);
+  --text-faint: var(--text-on-light-faint);
+  --border: var(--border-on-light);
+  --border-strong: var(--border-on-light-strong);
 }
 .badge-label { font-size: 0.72rem; color: var(--text-dim); max-width: 90px; line-height: 1.25; }
 .badge-2 { bottom: -22px; left: -22px; }
@@ -549,10 +581,9 @@ section { position: relative; padding: 130px 0; }
    stacked), so a single centered ellipse calibrated for a
    shorter section left the causes area flat and glow-less */
 .problem {
-  background:
-    radial-gradient(ellipse 55% 45% at 50% 20%, rgba(199, 168, 75, 0.065), transparent 70%),
-    radial-gradient(ellipse 65% 50% at 50% 85%, rgba(199, 168, 75, 0.055), transparent 70%),
-    var(--bg-soft);
+  background-image:
+    radial-gradient(ellipse 55% 45% at 50% 20%, rgba(27, 94, 58, 0.1), transparent 70%),
+    radial-gradient(ellipse 65% 50% at 50% 85%, rgba(27, 94, 58, 0.08), transparent 70%);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -592,7 +623,7 @@ section { position: relative; padding: 130px 0; }
   font-weight: 600;
   font-size: 5rem;
   line-height: 1;
-  color: var(--accent-bright);
+  color: var(--accent-text);
   margin-bottom: 18px;
 }
 .statement-stat-num small { font-size: 2.1rem; opacity: 0.8; }
@@ -612,7 +643,7 @@ section { position: relative; padding: 130px 0; }
   font-weight: 600;
   font-size: 4rem;
   line-height: 1;
-  color: var(--accent-bright);
+  color: var(--accent-text);
 }
 .stat-num small { font-size: 1.8rem; opacity: 0.8; }
 .problem-stat p { color: var(--text-dim); max-width: 280px; font-size: 0.98rem; }
@@ -626,15 +657,22 @@ section { position: relative; padding: 130px 0; }
 .cause-card {
   padding: 32px 28px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   background: var(--bg-elevated);
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  box-shadow: 0 20px 40px -22px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: border-color .35s var(--ease-hover), transform .35s var(--ease-hover), box-shadow .35s var(--ease-hover);
+  /* always a light bianco-soft surface (--bg-elevated) regardless of band */
+  color: var(--text-on-light);
+  --text-primary: var(--text-on-light);
+  --text-dim: var(--text-on-light-dim);
+  --text-faint: var(--text-on-light-faint);
+  --border: var(--border-on-light);
+  --border-strong: var(--border-on-light-strong);
 }
 .cause-card:hover {
   border-color: var(--border-strong);
   transform: translateY(-6px);
-  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 28px 52px -22px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .cause-card h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin-bottom: 12px; }
 .cause-card:nth-child(1) h3::before,
@@ -657,7 +695,7 @@ section { position: relative; padding: 130px 0; }
 .services {
   position: relative;
   overflow: hidden;
-  background: radial-gradient(ellipse 55% 60% at 50% 45%, rgba(199, 168, 75, 0.06), transparent 70%);
+  background-image: radial-gradient(ellipse 55% 60% at 50% 45%, rgba(27, 94, 58, 0.06), transparent 70%);
 }
 .services::before,
 .services::after {
@@ -714,15 +752,22 @@ section { position: relative; padding: 130px 0; }
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--border-strong);
   background: var(--bg-elevated);
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  box-shadow: 0 22px 44px -24px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: border-color .25s var(--ease-hover), box-shadow .25s var(--ease-hover);
   will-change: transform;
   transform-style: preserve-3d;
   overflow: hidden;
+  /* always a light bianco-soft surface (--bg-elevated) regardless of band */
+  color: var(--text-on-light);
+  --text-primary: var(--text-on-light);
+  --text-dim: var(--text-on-light-dim);
+  --text-faint: var(--text-on-light-faint);
+  --border: var(--border-on-light);
+  --border-strong: var(--border-on-light-strong);
 }
 .plan-card:hover {
   border-color: var(--accent-bright);
-  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 28px 56px -24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .plan-card-inner {
@@ -755,7 +800,7 @@ section { position: relative; padding: 130px 0; }
   font-size: 0.76rem;
   font-weight: 700;
   padding: 6px 16px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   letter-spacing: 0.02em;
   margin-bottom: 20px;
 }
@@ -796,7 +841,7 @@ section { position: relative; padding: 130px 0; }
 .process-pin {
   position: relative;
   padding: 110px 0;
-  background: radial-gradient(ellipse 55% 60% at 50% 42%, rgba(199, 168, 75, 0.07), transparent 70%);
+  background: radial-gradient(ellipse 55% 60% at 50% 42%, rgba(27, 94, 58, 0.07), transparent 70%);
 }
 .process-heading { position: relative; z-index: 1; margin-bottom: 60px; }
 
@@ -828,7 +873,7 @@ section { position: relative; padding: 130px 0; }
   font-family: var(--font-display);
   font-style: italic;
   font-size: 1.05rem;
-  color: var(--cotto-scuro);
+  color: var(--accent-text);
   font-weight: 600;
   margin-bottom: 18px;
 }
@@ -839,7 +884,7 @@ section { position: relative; padding: 130px 0; }
    Portfolio
    ========================================================================== */
 .portfolio {
-  background: radial-gradient(ellipse 55% 55% at 50% 45%, rgba(199, 168, 75, 0.06), transparent 70%);
+  background-image: radial-gradient(ellipse 55% 55% at 50% 45%, rgba(27, 94, 58, 0.06), transparent 70%);
 }
 .portfolio-note {
   color: var(--text-faint);
@@ -862,6 +907,22 @@ section { position: relative; padding: 130px 0; }
 
 .case-visual { perspective: 1200px; }
 
+/* wraps .case-visual + .timbro: .case-visual carries the pre-existing
+   reveal-image clip-path wipe (GSAP), which clips its entire subtree —
+   the timbro must sit OUTSIDE that clipped element (as a sibling, not a
+   child) or it would be cropped by the parent's clip-path indefinitely,
+   not just during the reveal animation. This wrapper is the actual grid
+   cell instead, un-clipped, so the timbro can overlap the image corner. */
+.case-visual-wrap { position: relative; }
+
+/* .timbro signature — wax-seal placement overlapping the image corner */
+.case-timbro {
+  position: absolute;
+  bottom: -18px;
+  right: 18px;
+  z-index: 2;
+}
+
 /* ---------- drag-reveal before/after compare ---------- */
 .compare {
   position: relative;
@@ -875,7 +936,7 @@ section { position: relative; padding: 130px 0; }
   box-shadow:
     0 30px 70px -20px rgba(0,0,0,0.7),
     0 10px 30px -10px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(199, 168, 75, 0.05);
+    0 0 0 1px rgba(27, 94, 58, 0.05);
 }
 .case-study--reverse .compare { transform: rotate(1.4deg); }
 .case-visual:hover .compare {
@@ -883,7 +944,7 @@ section { position: relative; padding: 130px 0; }
   box-shadow:
     0 30px 70px -20px rgba(0,0,0,0.7),
     0 10px 30px -10px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(199, 168, 75, 0.08);
+    0 0 0 1px rgba(27, 94, 58, 0.08);
 }
 
 /* ---------- real-project shot (TravelMap): same tilted-frame language
@@ -899,14 +960,14 @@ section { position: relative; padding: 130px 0; }
   box-shadow:
     0 30px 70px -20px rgba(0, 0, 0, 0.28),
     0 10px 30px -10px rgba(0, 0, 0, 0.18),
-    0 0 0 1px rgba(199, 168, 75, 0.06);
+    0 0 0 1px rgba(27, 94, 58, 0.06);
 }
 .case-visual:hover .project-shot {
   transform: rotate(0deg) scale(1.02);
   box-shadow:
     0 30px 70px -20px rgba(0, 0, 0, 0.28),
     0 10px 30px -10px rgba(0, 0, 0, 0.18),
-    0 0 0 1px rgba(199, 168, 75, 0.1);
+    0 0 0 1px rgba(27, 94, 58, 0.1);
 }
 
 /* screenshot slideshow — slides crossfade in place (absolute stack),
@@ -986,7 +1047,7 @@ section { position: relative; padding: 130px 0; }
   width: 2px;
   transform: translateX(-50%);
   background: var(--accent-bright);
-  box-shadow: 0 0 14px rgba(199, 168, 75, 0.55);
+  box-shadow: 0 0 14px rgba(27, 94, 58, 0.55);
 }
 .compare-handle-grip {
   position: relative;
@@ -1025,7 +1086,7 @@ section { position: relative; padding: 130px 0; }
 .mockup-body--small { padding: 22px 22px 20px; }
 .mockup-body--small .mockup-nav { margin-bottom: 20px; }
 .mockup-hero--small { margin-bottom: 18px; }
-.mockup-body--gym { background: radial-gradient(ellipse 120% 100% at 0% 0%, rgba(199,168,75,0.10), transparent 55%), linear-gradient(160deg, #131917 0%, #0B0F0E 100%); }
+.mockup-body--gym { background: radial-gradient(ellipse 120% 100% at 0% 0%, rgba(27,94,58,0.10), transparent 55%), linear-gradient(160deg, #131917 0%, #0B0F0E 100%); }
 
 /* ---------- "before" mockup: deliberately dated (circa 2013) ---------- */
 .mockup-frame--before { background: #d8d5c9; }
@@ -1106,9 +1167,9 @@ section { position: relative; padding: 130px 0; }
   letter-spacing: 0.06em;
   color: var(--teal);
   background: transparent;
-  border: 1px solid rgba(79, 209, 197, 0.4);
+  border: 1px solid rgba(27, 94, 58, 0.4);
   padding: 6px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   margin-bottom: 20px;
 }
 .case-copy h3 {
@@ -1124,7 +1185,7 @@ section { position: relative; padding: 130px 0; }
   color: var(--ulivo-scuro);
   border: 1px solid var(--ulivo);
   padding: 6px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
 }
 
 /* ---------- work list: real client work without a screenshot on hand
@@ -1163,9 +1224,9 @@ section { position: relative; padding: 130px 0; }
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--teal);
-  border: 1px solid rgba(79, 209, 197, 0.4);
+  border: 1px solid rgba(27, 94, 58, 0.4);
   padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
 }
 @media (max-width: 800px) {
   .work-row { grid-template-columns: 1fr; gap: 14px; }
@@ -1192,8 +1253,19 @@ section { position: relative; padding: 130px 0; }
 }
 
 .contact-sub { color: var(--text-dim); font-size: 1.05rem; max-width: 460px; margin: 22px 0 34px; line-height: 1.6; }
-.contact-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.contact-actions { position: relative; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; padding-right: 70px; }
 .contact-hint { color: var(--text-faint); font-size: 0.88rem; }
+
+/* .timbro signature — floats just off the CTA's trailing edge. Vertical
+   centering via margin-top (not a transform: translateY), since GSAP
+   owns .timbro's transform (rotate/scale reveal) and a CSS-composed
+   transform on the same property would fight it. */
+.contact-timbro {
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  margin-top: calc(var(--timbro-size) / -2);
+}
 
 /* the one deliberately human moment on the page — trust carried through
    plain-language copy and a named signature, not through visual warmth.
@@ -1220,7 +1292,7 @@ section { position: relative; padding: 130px 0; }
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.72rem;
-  color: var(--teal);
+  color: var(--accent-text);
 }
 
 .contact-form {
@@ -1231,6 +1303,16 @@ section { position: relative; padding: 130px 0; }
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  /* always a light bianco-soft surface (--bg-elevated) regardless of band —
+     #contatti is dark, so without this pin every label/input inside would
+     inherit dark-band (light) text and vanish against this light card */
+  color: var(--text-on-light);
+  --text-primary: var(--text-on-light);
+  --text-dim: var(--text-on-light-dim);
+  --text-faint: var(--text-on-light-faint);
+  --border: var(--border-on-light);
+  --border-strong: var(--border-on-light-strong);
 }
 .form-row { display: flex; flex-direction: column; gap: 8px; }
 .form-row label { font-size: 0.82rem; color: var(--text-faint); }
@@ -1241,10 +1323,18 @@ section { position: relative; padding: 130px 0; }
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   padding: 13px 16px;
-  color: var(--text-primary);
   font-size: 0.95rem;
   resize: none;
   transition: border-color .3s var(--ease-hover);
+  /* dark nero-soft surface (--bg-elevated-2) nested inside the light
+     .contact-form card — re-pin to dark-surface text, overriding the
+     card's own light pin for just this input */
+  color: var(--text-on-dark);
+  --text-primary: var(--text-on-dark);
+  --text-dim: var(--text-on-dark-dim);
+  --text-faint: var(--text-on-dark-faint);
+  --border: var(--border-on-dark);
+  --border-strong: var(--border-on-dark-strong);
 }
 .form-row input:focus,
 .form-row select:focus,
@@ -1434,6 +1524,15 @@ body.custom-cursor button { cursor: none; }
     visibility: hidden;
     transform: translateY(-8px);
     transition: opacity .3s var(--ease-reveal), transform .3s var(--ease-reveal), visibility .3s;
+    /* its own opaque light surface — override the navbar's dark-surface
+       pin so the dropdown's own text/border read against ITS background,
+       not the transparent navbar bar behind it */
+    color: var(--text-on-light);
+    --text-primary: var(--text-on-light);
+    --text-dim: var(--text-on-light-dim);
+    --text-faint: var(--text-on-light-faint);
+    --border: var(--border-on-light);
+    --border-strong: var(--border-on-light-strong);
   }
   .nav-links.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
   .nav-links a { width: 100%; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -1454,6 +1553,9 @@ body.custom-cursor button { cursor: none; }
 
   .problem-stat .stat-num { font-size: 3rem; }
 
-  .contact-actions { flex-direction: column; align-items: stretch; }
+  .contact-actions { flex-direction: column; align-items: stretch; padding-right: 0; }
+  .contact-timbro { position: static; align-self: flex-start; margin: 10px 0 0; }
   .contact-form { padding: 26px; }
+
+  .case-timbro { bottom: -14px; right: 8px; --timbro-size: 76px; }
 }

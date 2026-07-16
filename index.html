@@ -63,7 +63,7 @@
 <main>
 
 <!-- ============ HERO ============ -->
-<section class="hero" id="top">
+<section class="hero" id="top" data-band="light">
   <div class="hero-bg" aria-hidden="true"></div>
 
   <div class="container hero-inner">
@@ -143,7 +143,7 @@
 </section>
 
 <!-- ============ PROBLEMA ============ -->
-<section class="problem" id="problema">
+<section class="problem" id="problema" data-band="dark">
   <div class="problem-pin" id="problemPin">
     <div class="container statement-wrap">
       <div class="statement-main">
@@ -200,7 +200,7 @@
 </section>
 
 <!-- ============ SERVIZI ============ -->
-<section class="services" id="servizi">
+<section class="services" id="servizi" data-band="light">
   <div class="container">
     <h2 class="section-title">
       <span class="line-mask"><span class="line">Zero rischio per iniziare,</span></span>
@@ -245,7 +245,7 @@
 </section>
 
 <!-- ============ COME FUNZIONA ============ -->
-<section class="process" id="come-funziona">
+<section class="process" id="come-funziona" data-band="dark">
   <div class="process-pin">
     <div class="container process-heading">
       <h2 class="section-title">
@@ -282,7 +282,7 @@
 </section>
 
 <!-- ============ PORTFOLIO / DEMO ============ -->
-<section class="portfolio" id="progetti">
+<section class="portfolio" id="progetti" data-band="light">
   <div class="container">
     <h2 class="section-title">
       <span class="line-mask"><span class="line">Non promesse. Progetti veri,</span></span>
@@ -293,25 +293,28 @@
     <div class="case-studies">
 
       <article class="case-study case-study--travelmap">
-        <div class="case-visual reveal-image">
-          <div class="project-shot" id="travelmapShot">
-            <div class="shot-slide is-active">
-              <img src="assets/travelmap-3.jpg" alt="Mappa 3D interattiva di TravelMap con le mete visitate e in wishlist" loading="lazy" width="1600" height="1103">
+        <div class="case-visual-wrap">
+          <div class="case-visual reveal-image">
+            <div class="project-shot" id="travelmapShot">
+              <div class="shot-slide is-active">
+                <img src="assets/travelmap-3.jpg" alt="Mappa 3D interattiva di TravelMap con le mete visitate e in wishlist" loading="lazy" width="1600" height="1103">
+              </div>
+              <div class="shot-slide">
+                <img src="assets/travelmap-4.jpg" alt="Generatore di itinerari AI di TravelMap con i viaggi salvati" loading="lazy" width="1600" height="1103">
+              </div>
+              <div class="shot-slide">
+                <img src="assets/travelmap-5.jpg" alt="Itinerario di 3 giorni a Roma generato dall'AI di TravelMap, suddiviso giorno per giorno" loading="lazy" width="1203" height="830">
+              </div>
+              <button type="button" class="hero-shot-arrow hero-shot-arrow--prev" aria-label="Schermata precedente">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+              </button>
+              <button type="button" class="hero-shot-arrow hero-shot-arrow--next" aria-label="Schermata successiva">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+              <div class="shot-dots" id="travelmapDots" aria-hidden="true"></div>
             </div>
-            <div class="shot-slide">
-              <img src="assets/travelmap-4.jpg" alt="Generatore di itinerari AI di TravelMap con i viaggi salvati" loading="lazy" width="1600" height="1103">
-            </div>
-            <div class="shot-slide">
-              <img src="assets/travelmap-5.jpg" alt="Itinerario di 3 giorni a Roma generato dall'AI di TravelMap, suddiviso giorno per giorno" loading="lazy" width="1203" height="830">
-            </div>
-            <button type="button" class="hero-shot-arrow hero-shot-arrow--prev" aria-label="Schermata precedente">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
-            </button>
-            <button type="button" class="hero-shot-arrow hero-shot-arrow--next" aria-label="Schermata successiva">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-            </button>
-            <div class="shot-dots" id="travelmapDots" aria-hidden="true"></div>
           </div>
+          <div class="timbro case-timbro" aria-hidden="true"><span>ONLINE<br>DAL 2026</span></div>
         </div>
         <div class="case-copy reveal">
           <span class="case-tag">01 · Progetto reale</span>
@@ -360,7 +363,7 @@
 </section>
 
 <!-- ============ CONTATTI ============ -->
-<section class="contact" id="contatti">
+<section class="contact" id="contatti" data-band="dark">
   <div class="contact-bg" aria-hidden="true"></div>
   <div class="container">
     <div class="contact-grid">
@@ -386,6 +389,7 @@
           <a href="mailto:massimilianodellapia07@gmail.com" class="btn btn-ghost btn-lg" data-cursor="Scrivici">
             massimilianodellapia07@gmail.com
           </a>
+          <div class="timbro contact-timbro" aria-hidden="true"><span>PROGETTO<br>VERO</span></div>
         </div>
 
         <p class="contact-hint reveal">Oppure lascia i tuoi dati: ti contattiamo noi su WhatsApp.</p>

@@ -265,6 +265,19 @@ ScrollTrigger.batch('.reveal-image', {
   }),
 });
 
+/* Timbro signature — stamps in near the TravelMap case study and the
+   contact CTA: opacity/scale settle from a small off state to full size
+   while holding its -9deg tilt throughout (never un-rotates), same
+   ease-reveal curve as every other scroll reveal on the page. */
+gsap.set('.timbro', { opacity: 0, scale: 0.85, rotate: -9 });
+ScrollTrigger.batch('.timbro', {
+  start: 'top 85%',
+  once: true,
+  onEnter: (batch) => gsap.to(batch, {
+    opacity: 1, scale: 1, rotate: -9, duration: 0.8, ease: 'easeReveal', stagger: 0.1,
+  }),
+});
+
 /* Problem -> Solution scroll-pinned dissolve. Pins the statement for
    one viewport-height of scroll while the problem statement fades/
    drifts up and out and the solution statement fades/drifts in, with

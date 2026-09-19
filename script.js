@@ -152,6 +152,7 @@ gsap.set('.logo img', { clipPath: 'inset(0 100% 0 0)' });
 gsap.set('#navLinks a, .nav-cta', { opacity: 0, y: 10 });
 gsap.set('.hero-sub', { opacity: 0, y: 20 });
 gsap.set('.hero-actions', { opacity: 0, y: 20 });
+gsap.set('.hero-visual', { opacity: 0, y: 20 });
 
 /* Split the two headline lines into words so each one can animate up
    with its own slight rotation. Falls back to a plain reveal of the
@@ -214,6 +215,7 @@ heroTl
   .to(heroWords, { opacity: 1, yPercent: 0, rotate: 0, duration: 0.5, stagger: 0.025 }, '-=0.2')
   .to('.hero-sub', { y: 0, opacity: 1, duration: 0.6 }, '-=0.25')
   .to('.hero-actions', { y: 0, opacity: 1, duration: 0.6 }, '-=0.4')
+  .to('.hero-visual', { y: 0, opacity: 1, duration: 0.7 }, '-=0.45')
   .call(startHeroCountUps);
 
 /* Scroll reveals — triggered once at ~78% viewport entry (anticipated,
@@ -254,19 +256,6 @@ ScrollTrigger.batch('.reveal-image', {
   once: true,
   onEnter: (batch) => gsap.to(batch, {
     clipPath: 'inset(0 0 0% 0)', scale: 1, opacity: 1, duration: 0.9, ease: 'easeReveal', stagger: 0.1,
-  }),
-});
-
-/* Timbro signature — stamps in near the TravelMap case study and the
-   contact CTA: opacity/scale settle from a small off state to full size
-   while holding its -9deg tilt throughout (never un-rotates), same
-   ease-reveal curve as every other scroll reveal on the page. */
-gsap.set('.timbro', { opacity: 0, scale: 0.85, rotate: -9 });
-ScrollTrigger.batch('.timbro', {
-  start: 'top 85%',
-  once: true,
-  onEnter: (batch) => gsap.to(batch, {
-    opacity: 1, scale: 1, rotate: -9, duration: 0.8, ease: 'easeReveal', stagger: 0.1,
   }),
 });
 
@@ -468,179 +457,6 @@ if (!prefersReducedMotion) {
 }
 
 /* ---------------------------------------------------------------
-   Signature moment — each portfolio mockup constructs itself piece by
-   piece as it scrolls into view: chrome bar, then nav, then the image
-   block, then the headline, then the CTA. Echoes the actual pitch
-   ("we build your site fast") instead of a generic fade-in. Scrubbed
-   to the case-study's own scroll position, so scrolling back up
-   un-builds it cleanly rather than just replaying a fixed animation. */
-if (!prefersReducedMotion) {
-  gsap.utils.toArray('.case-study:not(.case-study--travelmap)').forEach((study) => {
-    // scoped to .compare-after specifically — the "before" mockup
-    // reuses .mockup-chrome for its own browser-frame look, so an
-    // unscoped query would be one DOM-order accident away from
-    // animating the wrong layer's chrome bar
-    const after = study.querySelector('.compare-after') || study;
-    const chrome = after.querySelector('.mockup-chrome');
-    const nav = after.querySelector('.mockup-nav');
-    const portrait = after.querySelector('.mockup-portrait');
-    const kicker = after.querySelector('.mockup-kicker');
-    const h1 = after.querySelector('.mockup-h1');
-    const cta = after.querySelector('.mockup-cta');
-
-    gsap.set([chrome, nav, kicker, h1, cta], { opacity: 0, y: 14 });
-    gsap.set(portrait, { opacity: 0, scale: 0.92 });
-
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: study,
-        start: 'top 82%',
-        end: 'top 32%',
-        scrub: 0.4,
-      },
-    })
-      .to(chrome, { opacity: 1, y: 0, ease: 'none', duration: 0.18 }, 0)
-      .to(nav, { opacity: 1, y: 0, ease: 'none', duration: 0.18 }, 0.16)
-      .to(portrait, { opacity: 1, scale: 1, ease: 'none', duration: 0.22 }, 0.34)
-      .to([kicker, h1], { opacity: 1, y: 0, ease: 'none', duration: 0.18 }, 0.56)
-      .to(cta, { opacity: 1, y: 0, ease: 'none', duration: 0.18 }, 0.76);
-  });
-}
-
-/* ---------------------------------------------------------------
-   Signature interaction — drag-reveal before/after on each portfolio
-   mockup. Pointer Events unify mouse, touch and pen in one listener
-   set, so the same code drives both desktop drag and mobile swipe.
-   Position tracks the pointer 1:1 while dragging — no eased lag, per
-   spec — while the hint label's fade-out uses the site's standard
-   ease. Independent of the construct-piece-by-piece reveal above:
-   that animates opacity/y on the individual pieces inside
-   .compare-after, this animates clip-path on .compare-after itself,
-   so the two never touch the same property. */
-gsap.utils.toArray('.compare').forEach((compare) => {
-  const after = compare.querySelector('.compare-after');
-  const handle = compare.querySelector('.compare-handle');
-  const hint = compare.querySelector('.compare-hint');
-  if (!after || !handle) return;
-
-  let dragging = false;
-  let hintDismissed = false;
-
-  function dismissHint() {
-    if (hintDismissed || !hint) return;
-    hintDismissed = true;
-    hint.classList.add('is-hidden');
-  }
-  const hintTimer = setTimeout(dismissHint, 4000);
-
-  function setPosition(clientX) {
-    const rect = compare.getBoundingClientRect();
-    const pct = gsap.utils.clamp(0, 100, ((clientX - rect.left) / rect.width) * 100);
-    after.style.clipPath = `inset(0 0 0 ${pct}%)`;
-    handle.style.left = `${pct}%`;
-  }
-
-  compare.addEventListener('pointerdown', (e) => {
-    dragging = true;
-    try { compare.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer to capture — drag still tracks via move/up */ }
-    clearTimeout(hintTimer);
-    dismissHint();
-    setPosition(e.clientX);
-  });
-  compare.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    setPosition(e.clientX);
-  });
-  const stopDrag = (e) => {
-    dragging = false;
-    try { if (compare.hasPointerCapture(e.pointerId)) compare.releasePointerCapture(e.pointerId); } catch (err) { /* nothing captured */ }
-  };
-  compare.addEventListener('pointerup', stopDrag);
-  compare.addEventListener('pointercancel', stopDrag);
-});
-
-/* ---------------------------------------------------------------
-   TravelMap screenshot slideshow — real captures of the live app,
-   auto-advancing with a crossfade (ease-reveal, matches the site's
-   scroll-reveal curve rather than inventing a one-off timing) until
-   the visitor takes over: dots, arrows, or a touch swipe all count as
-   manual navigation and permanently stop autoplay rather than having
-   it resume later and fight whatever the visitor just chose.
-   --------------------------------------------------------------- */
-(() => {
-  const shot = document.getElementById('travelmapShot');
-  const dotsWrap = document.getElementById('travelmapDots');
-  if (!shot || !dotsWrap) return;
-
-  const slides = Array.from(shot.querySelectorAll('.shot-slide'));
-  if (slides.length < 2) return;
-
-  const prevBtn = shot.querySelector('.hero-shot-arrow--prev');
-  const nextBtn = shot.querySelector('.hero-shot-arrow--next');
-
-  slides.forEach((_, i) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.setAttribute('aria-label', `Vai alla schermata ${i + 1}`);
-    if (i === 0) dot.classList.add('is-active');
-    dot.addEventListener('click', () => { goTo(i); stopForGood(); });
-    dotsWrap.appendChild(dot);
-  });
-  const dotEls = Array.from(dotsWrap.children);
-
-  let active = 0;
-  let timer = null;
-  let userTookOver = false;
-
-  function goTo(i) {
-    if (i === active) return;
-    slides[active].classList.remove('is-active');
-    dotEls[active].classList.remove('is-active');
-    active = i;
-    slides[active].classList.add('is-active');
-    dotEls[active].classList.add('is-active');
-  }
-
-  function next() { goTo((active + 1) % slides.length); }
-  function prev() { goTo((active - 1 + slides.length) % slides.length); }
-
-  function play() {
-    if (prefersReducedMotion || userTookOver) return;
-    stop();
-    timer = setInterval(next, 4000);
-  }
-  function stop() {
-    if (timer) { clearInterval(timer); timer = null; }
-  }
-  function stopForGood() {
-    userTookOver = true;
-    stop();
-  }
-
-  if (prevBtn) prevBtn.addEventListener('click', () => { prev(); stopForGood(); });
-  if (nextBtn) nextBtn.addEventListener('click', () => { next(); stopForGood(); });
-
-  // touch swipe — left/right, a modest threshold so it doesn't fire on
-  // an incidental tap or a mostly-vertical scroll gesture
-  let touchStartX = null;
-  shot.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-  shot.addEventListener('touchend', (e) => {
-    if (touchStartX == null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    touchStartX = null;
-    if (Math.abs(dx) < 40) return;
-    if (dx < 0) next(); else prev();
-    stopForGood();
-  }, { passive: true });
-
-  play();
-  shot.addEventListener('mouseenter', stop);
-  shot.addEventListener('mouseleave', play);
-})();
-
-/* ---------------------------------------------------------------
    Magnetic CTAs — every primary button pulls gently toward the
    cursor within a 40px radius (max ~10px of travel, so it reads as a
    pull, not a chase) and springs back on leave. The contact WhatsApp
@@ -679,19 +495,21 @@ if (canHover && !prefersReducedMotion) {
 }
 
 /* ---------------------------------------------------------------
-   Custom cursor — a small brass dot that follows the pointer and
-   morphs into a labelled pill over any [data-cursor] element.
-   Desktop-with-a-mouse only: gated on the same canHover check as the
-   magnetic buttons above, so touch devices never load this and
-   reduced-motion visitors keep the native cursor entirely.
+   Custom cursor — a small dot that follows the pointer and morphs
+   into a labelled pill over any [data-cursor] element. Desktop-with-
+   a-mouse only: gated on the same canHover check as the magnetic
+   buttons above, so touch devices never load this and reduced-motion
+   visitors keep the native cursor entirely.
 
    Movement is driven by gsap.quickTo on x/y (transform only, never
-   left/top), updated straight from the 'pointermove' event rather
-   than a manual gsap.ticker lerp on top of it — that double-smoothing
-   (a hand-rolled lerp chasing an already-eased quickTo value every
-   frame) was the actual source of the stutter. xPercent/yPercent
-   center the dot on the pointer regardless of its current (possibly
-   pill-expanded) width/height.
+   left/top). Starts at opacity 0 so it can never sit stuck in the
+   top-left corner before the pointer has moved: the first
+   'pointermove' snaps the dot straight to the cursor with gsap.set
+   (no tween — there is nothing to animate from yet) and only then
+   fades it in. Leaving/re-entering the document (pointerleave /
+   pointerenter, e.g. the pointer moving off the browser window or
+   over a native <select>) fades it out/in the same way, so it never
+   reads as "left behind" outside the viewport.
    --------------------------------------------------------------- */
 const cursorEl = document.getElementById('cursor');
 const cursorLabel = document.getElementById('cursorLabel');
@@ -699,13 +517,27 @@ const cursorLabel = document.getElementById('cursorLabel');
 if (cursorEl && canHover && !prefersReducedMotion) {
   document.body.classList.add('custom-cursor');
 
-  gsap.set(cursorEl, { xPercent: -50, yPercent: -50 });
-  const setCursorX = gsap.quickTo(cursorEl, 'x', { duration: 0.35, ease: 'power3' });
-  const setCursorY = gsap.quickTo(cursorEl, 'y', { duration: 0.35, ease: 'power3' });
+  gsap.set(cursorEl, { xPercent: -50, yPercent: -50, opacity: 0 });
+  const setCursorX = gsap.quickTo(cursorEl, 'x', { duration: 0.3, ease: 'power3' });
+  const setCursorY = gsap.quickTo(cursorEl, 'y', { duration: 0.3, ease: 'power3' });
+
+  let hasPositioned = false;
 
   window.addEventListener('pointermove', (e) => {
+    if (!hasPositioned) {
+      hasPositioned = true;
+      gsap.set(cursorEl, { x: e.clientX, y: e.clientY });
+      gsap.to(cursorEl, { opacity: 1, duration: 0.25, ease: 'easeHover' });
+    }
     setCursorX(e.clientX);
     setCursorY(e.clientY);
+  });
+
+  document.addEventListener('pointerleave', () => {
+    gsap.to(cursorEl, { opacity: 0, duration: 0.2, ease: 'easeHover' });
+  });
+  document.addEventListener('pointerenter', () => {
+    if (hasPositioned) gsap.to(cursorEl, { opacity: 1, duration: 0.2, ease: 'easeHover' });
   });
 
   document.querySelectorAll('[data-cursor]').forEach((el) => {

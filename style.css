@@ -296,6 +296,13 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
    ========================================================================== */
 .hero {
   position: relative;
+  /* establishes a local stacking context so the canvas's z-index:-1 stays
+     scoped to THIS section (behind hero-inner, in front of .hero's own
+     background) instead of escaping to compare against the page's root
+     stacking context — without this, a negative z-index on a child of a
+     plain position:relative element with no z-index of its own can end
+     up painted behind the section's own background, i.e. invisible. */
+  isolation: isolate;
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -304,55 +311,39 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   overflow: hidden;
 }
 
-/* decorative glow only — background-image (not the background shorthand)
-   so it layers on top of the section[data-band] fill instead of
-   replacing it; motion carries the drama (word reveal, cursor, magnetic
-   CTA), the backdrop stays quiet */
-.hero-bg {
+/* Three.js wave grid — scoped to the hero only (not a page-wide fixed
+   background), and it IS the hero's background now (no separate CSS
+   gradient layered with it — one visual, not two competing ones).
+   pointer-events:none so it never intercepts clicks on the CTAs sitting
+   in front of it; the wave's own mouse tracking listens on .hero itself,
+   unaffected by that. If WebGL/JS is unavailable, HeroWaveGrid.js
+   removes this canvas outright and the section's own flat --bianco
+   background (from [data-band="light"]) is the fallback. */
+.hero-wave-canvas {
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image: radial-gradient(ellipse 65% 60% at 68% 40%, var(--accent-glass-strong), transparent 70%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: block;
+  pointer-events: none;
 }
 
 .hero-inner {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: 40px;
-  align-items: center;
-}
-
-/* the one deliberate kicker on the page — mono, tracked, a dash instead
-   of a bullet. Used once, in the hero, not repeated as section grammar. */
-.hero-kicker {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-faint);
-  margin-bottom: 22px;
-}
-.hero-kicker::before {
-  content: '';
-  width: 32px;
-  height: 1px;
-  background: var(--text-faint);
-  flex-shrink: 0;
+  max-width: 760px;
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(2.8rem, 4.4vw + 1.5rem, 6rem);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  font-size: clamp(3.2rem, 5vw + 1.8rem, 6rem);
+  line-height: 0.96;
+  letter-spacing: -0.025em;
   color: var(--text-primary);
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 }
 .title-line { display: block; }
 .title-line--accent { font-style: italic; color: var(--teal); font-weight: 300; }
@@ -362,10 +353,10 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
 
 .hero-sub {
   max-width: 480px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.6;
   color: var(--text-dim);
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
 .hero-actions {
@@ -373,113 +364,12 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 34px;
 }
 
-.hero-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  font-size: 0.86rem;
-  color: var(--text-faint);
-}
-.dot-sep { color: var(--border-strong); }
-
-/* ---------- hero visual / mockup ---------- */
-.hero-visual {
-  position: relative;
-}
-.mockup-wrap {
-  position: relative;
-  perspective: 1400px;
-}
-
-.mockup-frame {
-  position: relative;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--bg-elevated-2);
-  border: 1px solid var(--border-strong);
-  box-shadow:
-    0 30px 70px -20px rgba(0, 0, 0, 0.28),
-    0 10px 30px -10px rgba(0, 0, 0, 0.18),
-    0 0 0 1px rgba(27, 94, 58, 0.06);
-  transform: rotateY(-8deg) rotateX(3deg);
-  will-change: transform;
-  /* always a dark nero-soft surface (--bg-elevated-2) regardless of the
-     band it sits in — pin its own text/border vars to match, don't
-     inherit the enclosing section's band */
-  color: var(--text-on-dark);
-  --text-primary: var(--text-on-dark);
-  --text-dim: var(--text-on-dark-dim);
-  --text-faint: var(--text-on-dark-faint);
-  --border: var(--border-on-dark);
-  --border-strong: var(--border-on-dark-strong);
-}
-
-.mockup-chrome {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  height: 38px;
-  padding: 0 16px;
-  background: rgba(0,0,0,0.28);
-  border-bottom: 1px solid var(--border);
-}
-.mockup-dots { display: flex; gap: 6px; }
-.mockup-dots span {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--text-faint);
-}
-.mockup-dots span:nth-child(1) { background: var(--accent-bright); opacity: .7; }
-.mockup-dots span:nth-child(2) { background: var(--text-faint); }
-.mockup-dots span:nth-child(3) { background: var(--accent-deep); opacity: .7; }
-.mockup-url {
-  margin: 0 auto;
-  font-size: 11px;
-  color: var(--text-faint);
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  padding: 4px 14px;
-  border-radius: var(--radius-sm);
-}
-
-.mockup-body {
-  padding: 30px 30px 26px;
-  background:
-    radial-gradient(ellipse 120% 100% at 100% 0%, rgba(27, 94, 58, 0.09), transparent 55%),
-    linear-gradient(160deg, #131917 0%, #0B0F0E 100%);
-}
-
-/* real-screenshot slideshow — replaces the old fictional-demo mockup
-   content; the chrome (dots + url bar) above stays, only what's inside
-   this box changed. Slides crossfade in place (absolute stack), same
-   pattern as the portfolio's TravelMap slideshow, but arrow-driven
-   instead of autoplaying since this is a manual browse, not a preview
-   loop. object-fit:cover (not contain) — this is meant to read as an
-   actual page filling a browser window, not a framed photo. */
-.mockup-body--shots {
-  position: relative;
-  padding: 0;
-  aspect-ratio: 1.55;
-  overflow: hidden;
-}
-.hero-shot-slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity .45s var(--ease-reveal);
-}
-.hero-shot-slide.is-active { opacity: 1; }
-.hero-shot-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
+/* .hero-shot-arrow: still used by the portfolio's TravelMap case-study
+   slideshow (#progetti) — its own slides use .shot-slide, a different
+   class from the (now-removed) hero mockup's .hero-shot-slide, but the
+   circular prev/next button style is shared between the two. */
 .hero-shot-arrow {
   position: absolute;
   top: 50%;
@@ -503,36 +393,6 @@ em { font-style: italic; color: var(--teal); font-family: var(--font-display); }
 }
 .hero-shot-arrow--prev { left: 12px; }
 .hero-shot-arrow--next { right: 12px; }
-
-/* solid surface, not glass — a floating label needs to read clearly
-   against whatever's behind it without leaning on blur to do the work */
-.floating-badge {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  /* always a light bianco-soft surface (--bg-elevated) regardless of band */
-  color: var(--text-on-light);
-  --text-primary: var(--text-on-light);
-  --text-dim: var(--text-on-light-dim);
-  --text-faint: var(--text-on-light-faint);
-  --border: var(--border-on-light);
-  --border-strong: var(--border-on-light-strong);
-}
-.badge-label { font-size: 0.72rem; color: var(--text-dim); max-width: 90px; line-height: 1.25; }
-.badge-2 { bottom: -22px; left: -22px; }
-.badge-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--accent-bright);
-  box-shadow: 0 0 0 4px var(--accent-glass-strong);
-  flex-shrink: 0;
-}
 
 .scroll-cue {
   position: absolute;
@@ -1385,8 +1245,12 @@ section { position: relative; padding: 130px 0; }
    Custom cursor — morphing dot that expands into a labelled pill over
    interactive elements. pointer:fine + !prefers-reduced-motion gated in
    JS (adds .custom-cursor to body); default cursor otherwise, so touch
-   and reduced-motion visitors never see this at all.
-   ========================================================================== */
+   and reduced-motion visitors never see this at all. Position is driven
+   entirely by GSAP quickTo on transform (x/y) — never left/top and never
+   a CSS transition on transform, which would fight the tween and read as
+   laggy/jerky. width/height/background stay CSS-transitioned since GSAP
+   never touches those. @media (hover: none) is a belt-and-braces guard
+   alongside the JS canHover gate for touch devices. */
 body.custom-cursor,
 body.custom-cursor a,
 body.custom-cursor button { cursor: none; }
@@ -1403,6 +1267,7 @@ body.custom-cursor button { cursor: none; }
   display: flex;
   align-items: center;
   justify-content: center;
+  will-change: transform;
   transition: width .3s var(--ease-reveal), height .3s var(--ease-reveal), background .3s var(--ease-hover);
 }
 .cursor span {
@@ -1417,6 +1282,10 @@ body.custom-cursor button { cursor: none; }
 }
 .cursor.is-active { width: 86px; height: 86px; }
 .cursor.is-active span { opacity: 1; }
+
+@media (hover: none) {
+  .cursor { display: none; }
+}
 
 /* ==========================================================================
    Contact underline — a hand-drawn accent under "Parliamone.", scroll-
@@ -1489,9 +1358,6 @@ body.custom-cursor button { cursor: none; }
 }
 
 @media (max-width: 980px) {
-  .hero-inner { grid-template-columns: 1fr; }
-  .hero-visual { margin-top: 50px; order: 2; max-width: 480px; margin-left: auto; margin-right: auto; }
-  .mockup-frame { transform: none; }
   .problem-pin { height: auto; min-height: 78vh; overflow: visible; padding: 60px 0; }
   .statement-wrap { grid-template-columns: 1fr; gap: 36px; }
   .statement-stat { border-left: none; border-top: 2px solid var(--accent-glass-strong); padding-left: 0; padding-top: 24px; }
@@ -1543,13 +1409,6 @@ body.custom-cursor button { cursor: none; }
   .hero { padding-top: 96px; }
   .hero-actions { flex-direction: column; align-items: stretch; }
   .hero-actions .btn { width: 100%; }
-  .hero-meta { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .dot-sep { display: none; }
-
-  .mockup-hero { grid-template-columns: 1fr; }
-  .mockup-portrait { max-width: 200px; margin: 0 auto; }
-  .floating-badge { position: static; margin-top: 14px; width: fit-content; }
-  .badge-2 { margin-top: 10px; }
 
   .problem-stat .stat-num { font-size: 3rem; }
 

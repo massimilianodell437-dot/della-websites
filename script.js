@@ -147,15 +147,11 @@ if (!prefersReducedMotion) {
 
    Order: brief hold on bg-primary -> logo clip-path wipe -> nav items
    stagger in -> headline reveals word-by-word (up + slight rotation,
-   settling to 0) -> supporting copy and the mockup follow. */
+   settling to 0) -> supporting copy follows. */
 gsap.set('.logo img', { clipPath: 'inset(0 100% 0 0)' });
 gsap.set('#navLinks a, .nav-cta', { opacity: 0, y: 10 });
-gsap.set('.hero-kicker', { opacity: 0, y: 16 });
 gsap.set('.hero-sub', { opacity: 0, y: 20 });
 gsap.set('.hero-actions', { opacity: 0, y: 20 });
-gsap.set('.hero-meta', { opacity: 0, y: 16 });
-gsap.set('.hero-visual', { opacity: 0, x: 40 });
-gsap.set('.floating-badge', { opacity: 0, y: 14, scale: 0.9 });
 
 /* Split the two headline lines into words so each one can animate up
    with its own slight rotation. Falls back to a plain reveal of the
@@ -214,14 +210,10 @@ heroTl
   .to('.logo img', { clipPath: 'inset(0 0% 0 0)', duration: 0.4 })
   // 3. nav items stagger in, 60ms apart, overlapping the tail of the wipe
   .to('#navLinks a, .nav-cta', { opacity: 1, y: 0, duration: 0.25, stagger: 0.06 }, '-=0.25')
-  .to('.hero-kicker', { opacity: 1, y: 0, duration: 0.4 }, '-=0.3')
   // 4. headline reveals word-by-word: up + slight rotation settling to 0
   .to(heroWords, { opacity: 1, yPercent: 0, rotate: 0, duration: 0.5, stagger: 0.025 }, '-=0.2')
   .to('.hero-sub', { y: 0, opacity: 1, duration: 0.6 }, '-=0.25')
   .to('.hero-actions', { y: 0, opacity: 1, duration: 0.6 }, '-=0.4')
-  .to('.hero-meta', { y: 0, opacity: 1, duration: 0.5 }, '-=0.45')
-  .to('.hero-visual', { x: 0, opacity: 1, duration: 0.9 }, '-=0.8')
-  .to('.floating-badge', { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1 }, '-=0.4')
   .call(startHeroCountUps);
 
 /* Scroll reveals — triggered once at ~78% viewport entry (anticipated,
@@ -308,38 +300,7 @@ if (problemPin && !prefersReducedMotion) {
     .to(solutionStatement, { opacity: 1, y: 0, ease: 'none', duration: 0.5 }, 0.3);
 }
 
-/* Mockup parallax on mouse move (desktop, fine pointer only) */
-const mockupWrap = document.getElementById('mockupWrap');
 const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
-if (mockupWrap && canHover && !prefersReducedMotion) {
-  const rotateX = gsap.quickTo(mockupWrap, 'rotationX', { duration: 0.7, ease: 'easeHover' });
-  const rotateY = gsap.quickTo(mockupWrap, 'rotationY', { duration: 0.7, ease: 'easeHover' });
-
-  document.querySelector('.hero').addEventListener('mousemove', (e) => {
-    const rect = mockupWrap.getBoundingClientRect();
-    const relX = (e.clientX - rect.left - rect.width / 2) / rect.width;
-    const relY = (e.clientY - rect.top - rect.height / 2) / rect.height;
-    rotateY(-8 + relX * -10);
-    rotateX(3 + relY * 8);
-  });
-}
-
-/* Depth parallax as the user scrolls out of the hero: hero-copy scrolls
-   at the normal (native) rate as the middle plane; hero-visual gets an
-   extra push, reading as the closest plane. */
-if (!prefersReducedMotion) {
-  gsap.to('.hero-visual', {
-    y: 60,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true,
-    },
-  });
-}
 
 /* ---------------------------------------------------------------
    Services — glass cards: staggered scroll-scrub entrance, cursor-XY
@@ -680,36 +641,6 @@ gsap.utils.toArray('.compare').forEach((compare) => {
 })();
 
 /* ---------------------------------------------------------------
-   Hero mockup slideshow — real TravelMap screenshots inside the
-   browser-chrome frame, browsed manually via prev/next arrows (no
-   autoplay: this is a deliberate look, not a preview loop). Same
-   crossfade mechanics as the portfolio slideshow, loops in both
-   directions.
-   --------------------------------------------------------------- */
-(() => {
-  const shot = document.getElementById('heroShotBody');
-  if (!shot) return;
-
-  const slides = Array.from(shot.querySelectorAll('.hero-shot-slide'));
-  const prevBtn = shot.querySelector('.hero-shot-arrow--prev');
-  const nextBtn = shot.querySelector('.hero-shot-arrow--next');
-  if (slides.length < 2 || !prevBtn || !nextBtn) return;
-
-  let active = slides.findIndex((s) => s.classList.contains('is-active'));
-  if (active < 0) active = 0;
-
-  function goTo(i) {
-    if (i === active) return;
-    slides[active].classList.remove('is-active');
-    active = i;
-    slides[active].classList.add('is-active');
-  }
-
-  nextBtn.addEventListener('click', () => goTo((active + 1) % slides.length));
-  prevBtn.addEventListener('click', () => goTo((active - 1 + slides.length) % slides.length));
-})();
-
-/* ---------------------------------------------------------------
    Magnetic CTAs — every primary button pulls gently toward the
    cursor within a 40px radius (max ~10px of travel, so it reads as a
    pull, not a chase) and springs back on leave. The contact WhatsApp
@@ -748,12 +679,19 @@ if (canHover && !prefersReducedMotion) {
 }
 
 /* ---------------------------------------------------------------
-   Custom cursor — a small brass dot that lags the pointer slightly
-   (gsap.ticker lerp, not 1:1) and morphs into a labelled pill over
-   any [data-cursor] element. Desktop-with-a-mouse only: gated on the
-   same canHover check as the magnetic buttons above, so touch
-   devices never load this and reduced-motion visitors keep the
-   native cursor entirely.
+   Custom cursor — a small brass dot that follows the pointer and
+   morphs into a labelled pill over any [data-cursor] element.
+   Desktop-with-a-mouse only: gated on the same canHover check as the
+   magnetic buttons above, so touch devices never load this and
+   reduced-motion visitors keep the native cursor entirely.
+
+   Movement is driven by gsap.quickTo on x/y (transform only, never
+   left/top), updated straight from the 'pointermove' event rather
+   than a manual gsap.ticker lerp on top of it — that double-smoothing
+   (a hand-rolled lerp chasing an already-eased quickTo value every
+   frame) was the actual source of the stutter. xPercent/yPercent
+   center the dot on the pointer regardless of its current (possibly
+   pill-expanded) width/height.
    --------------------------------------------------------------- */
 const cursorEl = document.getElementById('cursor');
 const cursorLabel = document.getElementById('cursorLabel');
@@ -761,20 +699,13 @@ const cursorLabel = document.getElementById('cursorLabel');
 if (cursorEl && canHover && !prefersReducedMotion) {
   document.body.classList.add('custom-cursor');
 
-  let mouseX = 0;
-  let mouseY = 0;
-  let cursorX = 0;
-  let cursorY = 0;
+  gsap.set(cursorEl, { xPercent: -50, yPercent: -50 });
+  const setCursorX = gsap.quickTo(cursorEl, 'x', { duration: 0.35, ease: 'power3' });
+  const setCursorY = gsap.quickTo(cursorEl, 'y', { duration: 0.35, ease: 'power3' });
 
-  window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  gsap.ticker.add(() => {
-    cursorX += (mouseX - cursorX) * 0.18;
-    cursorY += (mouseY - cursorY) * 0.18;
-    gsap.set(cursorEl, { x: cursorX, y: cursorY, xPercent: -50, yPercent: -50 });
+  window.addEventListener('pointermove', (e) => {
+    setCursorX(e.clientX);
+    setCursorY(e.clientY);
   });
 
   document.querySelectorAll('[data-cursor]').forEach((el) => {

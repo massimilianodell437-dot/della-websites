@@ -1,131 +1,47 @@
 /* ==========================================================================
-   Della Websites — design tokens v3
-   Palette: warm white, full black, dark Italian-flag green as the single
-   accent. Bands alternate white/black section by section. The signature
-   element is a rotated "timbro" (ink stamp) mark near CTAs and case studies.
+   Della Websites — design tokens (rebrand-mono)
+   Monocromatico: bianco, grigio nebbia, nero pieno. Nessun accento:
+   il colore in pagina arriva solo dagli screenshot dei siti cliente.
    ========================================================================== */
 
 :root {
-  /* ---------- surfaces: alternate per section, not global ---------- */
-  --bianco: #F7F5F2;        /* warm white — light-band sections */
-  --bianco-soft: #EDEAE3;   /* nested panels on white */
-  --nero: #0A0A0A;          /* full black — dark-band sections */
-  --nero-soft: #141414;     /* nested panels on black */
-  --border-on-light: rgba(10, 10, 10, 0.12);
-  --border-on-light-strong: rgba(10, 10, 10, 0.24);
-  --border-on-dark: rgba(247, 245, 242, 0.14);
-  --border-on-dark-strong: rgba(247, 245, 242, 0.28);
+  /* Colore */
+  --white: #ffffff;
+  --mist: #ededed;
+  --line: #d6d6d6;
+  --muted: #5c5c5c;      /* 5.6:1 su --mist, 6.7:1 su --white */
+  --black: #000000;
+  --muted-inv: #a3a3a3;  /* 8.4:1 su --black */
 
-  /* ---------- text ---------- */
-  --text-on-light: #0A0A0A;
-  --text-on-light-dim: rgba(10, 10, 10, 0.68);
-  --text-on-light-faint: rgba(10, 10, 10, 0.46);
-  --text-on-dark: #F7F5F2;
-  --text-on-dark-dim: rgba(247, 245, 242, 0.7);
-  --text-on-dark-faint: rgba(247, 245, 242, 0.46);
+  /* Tipografia */
+  --font-display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* ---------- the one accent ---------- */
-  --verde: #1B5E3A;         /* dark Italian-flag green — every CTA, price, tag */
-  --verde-deep: #123F27;    /* hover/pressed */
-  --verde-glass: rgba(27, 94, 58, 0.08);
-  --verde-glass-strong: rgba(27, 94, 58, 0.16);
-  --on-accent: #F7F5F2;
+  --fs-hero: clamp(2.75rem, 11.2vw, 7.25rem);
+  --fs-h2: clamp(2.5rem, 5.5vw, 4.5rem);
+  --fs-card: clamp(1.75rem, 2.6vw, 2.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.9375rem;
+  --fs-nav: 0.875rem;
 
-  /* legacy aliases so existing var() references across style.css keep resolving */
-  --ink: var(--nero);
-  --ink-soft: var(--nero-soft);
-  --paper: var(--bianco);
-  --surface: var(--bianco-soft);
-  --surface-2: var(--nero-soft);
-  --border: var(--border-on-light);
-  --border-strong: var(--border-on-dark);
-  --text-primary: var(--text-on-light);
-  --text-dim: var(--text-on-light-dim);
-  --text-faint: var(--text-on-light-faint);
-  --brass: var(--verde);
-  --brass-deep: var(--verde-deep);
-  --teal: var(--verde);
-  --teal-deep: var(--verde-deep);
-  --cotto: var(--verde);
-  --cotto-scuro: var(--verde-deep);
-  --ulivo: var(--verde);
-  --ulivo-scuro: var(--verde-deep);
-  --accent-glass: var(--verde-glass);
-  --accent-glass-strong: var(--verde-glass-strong);
-  --accent-deep: var(--verde-deep);
-  --accent-bright: var(--verde);
-  /* --verde is a dark, low-luminance green — reads fine on --bianco but
-     falls under 3:1 against --nero (a "large text" 2.6:1, worse for
-     small labels). --accent-text is the band-aware variant for accent-
-     colored numerals/labels: verde on light bands, on-accent (cream) on
-     dark bands, where a dark accent color can't clear contrast on black. */
-  --accent-text: var(--verde);
-  --bg-primary: var(--bianco);
-  --bg-soft: var(--bianco-soft);
-  --bg-elevated: var(--bianco-soft);
-  --bg-elevated-2: var(--nero-soft);
+  /* Forme: il raggio segue la gerarchia */
+  --r-frame: 32px;   /* contenitore hero */
+  --r-card: 24px;    /* card */
+  --r-screen: 10px;  /* schermo dentro i mockup */
+  --r-pill: 999px;
 
-  --container: 1240px;
-  --radius-lg: 26px;
-  --radius-md: 16px;
-  --radius-sm: 10px;
+  /* Layout */
+  --page-max: 1376px;
+  --gutter: 16px;
+  --section-gap: 72px;
 
-  --font-display: 'Fraunces', 'Iowan Old Style', serif;
-  --font-body: 'Archivo', 'Segoe UI', sans-serif;
-  --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
-
-  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-hover: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-transition: cubic-bezier(0.83, 0, 0.17, 1);
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Section bands: apply data-band="light" or data-band="dark" on each
-   <section>. Everything inside inherits the right text/border colors
-   automatically — no per-element overrides needed. */
-section[data-band="light"] {
-  background: var(--bianco);
-  color: var(--text-on-light);
-  --border: var(--border-on-light);
-  --border-strong: var(--border-on-light-strong);
-  --text-primary: var(--text-on-light);
-  --text-dim: var(--text-on-light-dim);
-  --text-faint: var(--text-on-light-faint);
-  --accent-text: var(--verde);
-}
-section[data-band="light"] .band-dim { color: var(--text-on-light-dim); }
-section[data-band="light"] .band-faint { color: var(--text-on-light-faint); }
-
-section[data-band="dark"] {
-  background: var(--nero);
-  color: var(--text-on-dark);
-  --border: var(--border-on-dark);
-  --border-strong: var(--border-on-dark-strong);
-  --text-primary: var(--text-on-dark);
-  --text-dim: var(--text-on-dark-dim);
-  --text-faint: var(--text-on-dark-faint);
-  --accent-text: var(--on-accent);
-}
-section[data-band="dark"] .band-dim { color: var(--text-on-dark-dim); }
-section[data-band="dark"] .band-faint { color: var(--text-on-dark-faint); }
-
-/* Elevated "island" panels keep a fixed surface tone regardless of the
-   section band they sit in (--bg-elevated is always the light bianco-soft
-   surface, --bg-elevated-2 is always the dark nero-soft surface) — so their
-   own text/border variables must be pinned to match their own surface,
-   not inherited from the enclosing band. Apply .on-light-surface /
-   .on-dark-surface on any component whose background comes from
-   --bg-elevated / --bg-elevated-2 (or another fixed-tone background). */
-.on-light-surface {
-  --text-primary: var(--text-on-light);
-  --text-dim: var(--text-on-light-dim);
-  --text-faint: var(--text-on-light-faint);
-  --border: var(--border-on-light);
-  --border-strong: var(--border-on-light-strong);
-}
-.on-dark-surface {
-  --text-primary: var(--text-on-dark);
-  --text-dim: var(--text-on-dark-dim);
-  --text-faint: var(--text-on-dark-faint);
-  --border: var(--border-on-dark);
-  --border-strong: var(--border-on-dark-strong);
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+    --section-gap: 120px;
+  }
 }

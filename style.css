@@ -216,7 +216,8 @@ p { margin: 0; }
 .hero-title { font-size: var(--fs-hero); line-height: 0.96; }
 
 /* Ogni riga è una maschera: il testo sale dal basso all'ingresso */
-.line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+/* padding verticale: la maschera non taglia accenti (É) e virgole */
+.line { display: block; overflow: hidden; padding-block: 0.12em 0.06em; margin-block: -0.12em -0.06em; }
 .line-inner { display: block; white-space: nowrap; }
 
 .hero-intro {
@@ -356,12 +357,139 @@ p { margin: 0; }
 }
 
 /* --------------------------------------------------------------------------
+   Titoli di sezione
+   -------------------------------------------------------------------------- */
+h2 { font-size: var(--fs-h2); line-height: 0.96; }
+
+/* Negli H2 una riga può andare a capo su mobile: la maschera scorre lo stesso */
+h2 .line-inner { white-space: normal; }
+
+.section-head {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.section-head p {
+  max-width: 44ch;
+  color: var(--muted);
+}
+
+@media (min-width: 900px) {
+  .section-head {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    align-items: end;
+    gap: 48px;
+    margin-bottom: 56px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Il problema, in breve: un titolo e tre righe, niente card
+   -------------------------------------------------------------------------- */
+.problem { padding-bottom: var(--section-gap); }
+
+
+.problem-list {
+  display: grid;
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.problem-list li {
+  display: grid;
+  gap: 6px;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+.problem-list li:last-child { border-bottom: 1px solid var(--line); }
+
+.problem-list h3 { font-size: 1.5rem; }
+
+.problem-list p {
+  max-width: 44ch;
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+
+@media (min-width: 900px) {
+  .problem-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 32px;
+    margin-top: 56px;
+  }
+  .problem-list li,
+  .problem-list li:last-child {
+    padding: 24px 0 0;
+    border-bottom: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Perché funziona: tre card con le cifre vere del modello
+   -------------------------------------------------------------------------- */
+.why { padding-bottom: var(--section-gap); }
+
+.why-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.why-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 28px 24px 32px;
+  border-radius: var(--r-card);
+  background: var(--mist);
+}
+.why-card.on-dark { background: var(--black); color: var(--white); }
+
+.why-figure {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 7vw, 6rem);
+  line-height: 0.9;
+}
+.why-figure span {
+  margin-left: 6px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.on-dark .why-figure span { color: var(--muted-inv); }
+
+.why-card h3 {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-transform: none;
+}
+
+.why-card h3 + p {
+  max-width: 36ch;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+.why-card.on-dark h3 + p { color: var(--muted-inv); }
+
+@media (min-width: 900px) {
+  .why-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .why-card { min-height: 340px; padding: 32px; }
+}
+
+/* --------------------------------------------------------------------------
    Stato iniziale delle animazioni (solo se il movimento è consentito:
    la classe .motion la mette lo script in <head>)
    -------------------------------------------------------------------------- */
-.motion .hero-title .line-inner { transform: translateY(110%); }
+.motion .hero-title .line-inner,
+.motion h2 .line-inner { transform: translateY(110%); }
 .motion [data-hero-fade],
-.motion .work-card { opacity: 0; }
+.motion .work-card,
+.motion [data-stagger] > * { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

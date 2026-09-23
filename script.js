@@ -75,6 +75,33 @@ if (!motionOK) {
     scrollTrigger: { trigger: '.work-grid', start: 'top 85%', once: true },
   });
 
+  // Titoli di sezione: riga per riga quando entrano in vista
+  gsap.utils.toArray('h2').forEach((title) => {
+    const lines = title.querySelectorAll('.line-inner');
+    if (!lines.length) return;
+    gsap.set(lines, { yPercent: 110, y: 0 });
+    gsap.to(lines, {
+      yPercent: 0,
+      duration: 1,
+      ease: 'expo.out',
+      stagger: 0.08,
+      scrollTrigger: { trigger: title, start: 'top 85%', once: true },
+    });
+  });
+
+  // Gruppi [data-stagger]: i figli salgono uno dopo l'altro
+  gsap.utils.toArray('[data-stagger]').forEach((group) => {
+    gsap.set(group.children, { autoAlpha: 0, y: 40 });
+    gsap.to(group.children, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.9,
+      ease: 'expo.out',
+      stagger: 0.1,
+      scrollTrigger: { trigger: group, start: 'top 85%', once: true },
+    });
+  });
+
   // Parallax leggero sui mockup, solo da tablet in su
   gsap.matchMedia().add('(min-width: 768px)', () => {
     gsap.utils.toArray('[data-parallax]').forEach((el) => {

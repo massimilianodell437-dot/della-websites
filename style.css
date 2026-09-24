@@ -329,12 +329,12 @@ p { margin: 0; }
 }
 
 @media (min-width: 1024px) {
+  /* Tre righe: titolo + testo, bottone, laptop. Il laptop sta sempre
+     sotto il titolo e sborda solo in basso (il riquadro lo taglia) */
   .hero-frame {
     grid-template-columns: minmax(0, 1fr) 320px;
-    grid-template-rows: auto auto 1fr;
     column-gap: 48px;
     row-gap: 0;
-    min-height: clamp(660px, calc(100svh - 96px), 860px);
     padding: 56px 56px 0;
   }
 
@@ -352,11 +352,11 @@ p { margin: 0; }
   .hero-cta { grid-column: 1; grid-row: 2; margin-top: 40px; }
 
   .hero-visual {
-    position: absolute;
-    right: 56px;
-    bottom: -21%;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: end;
     width: min(64%, 880px);
-    margin: 0;
+    margin: 48px 0 -12%;
   }
 }
 

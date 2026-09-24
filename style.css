@@ -1,6 +1,7 @@
 /* ==========================================================================
    Della Websites — rebrand-mono
-   Token in tokens.css. Una sezione alla volta: header, hero, portfolio.
+   Token in tokens.css. Ordine: base, bottoni, header, mockup, hero,
+   portfolio, problema, perché funziona, come lavoro, contatti, footer.
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -179,25 +180,12 @@ p { margin: 0; }
   background: var(--black);
   transform: translateX(-50%);
 }
-.device-phone img,
-.device-phone .screen-pending {
+.device-phone img {
   width: 100%;
   aspect-ratio: 390 / 844;
   object-fit: cover;
   object-position: top;
   border-radius: 27px;
-}
-
-/* Segnaposto finché lo screenshot mobile non è approvato */
-.screen-pending {
-  display: grid;
-  place-items: center;
-  padding: 16px;
-  background: var(--line);
-  color: var(--muted);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  text-align: center;
 }
 
 /* --------------------------------------------------------------------------
@@ -573,6 +561,124 @@ h2 .line-inner { white-space: normal; }
   .how-steps li:nth-child(n + 3)  { grid-column: 3; }
   .how-steps li:nth-child(odd)    { grid-row: 1; }
   .how-steps li:nth-child(even)   { grid-row: 2; }
+}
+
+/* --------------------------------------------------------------------------
+   Contatti: titolo e nota firmata a sinistra, form su WhatsApp a destra
+   -------------------------------------------------------------------------- */
+.contact {
+  display: grid;
+  gap: 40px;
+  padding-bottom: var(--section-gap);
+}
+
+.contact-sub {
+  max-width: 40ch;
+  margin-top: 20px;
+  color: var(--muted);
+}
+
+.contact-mail {
+  display: inline-block;
+  margin-top: 16px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  overflow-wrap: anywhere;
+}
+.contact-mail:hover { text-decoration-thickness: 2px; }
+
+.signed-note {
+  max-width: 40ch;
+  margin: 40px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.signed-note blockquote { margin: 0; font-size: 1.0625rem; line-height: 1.45; }
+.signed-note figcaption {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+
+.contact-form {
+  display: grid;
+  gap: 18px;
+  padding: 28px 24px;
+  border-radius: var(--r-card);
+  background: var(--mist);
+}
+
+.form-row { display: grid; gap: 8px; }
+
+.form-row label {
+  font-size: var(--fs-nav);
+  font-weight: 500;
+}
+.form-row label span { color: var(--muted); font-weight: 400; }
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+}
+.form-row textarea { resize: vertical; min-height: 96px; }
+.form-row ::placeholder { color: var(--muted); opacity: 1; }
+.form-row :is(input, select, textarea):focus-visible { border-color: var(--black); }
+
+.contact-form .btn { justify-self: start; margin-top: 6px; }
+
+@media (min-width: 900px) {
+  .contact {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 560px);
+    column-gap: 64px;
+    align-items: start;
+  }
+  .contact-form { padding: 36px; }
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-nav);
+}
+
+.site-footer .container {
+  display: grid;
+  gap: 16px;
+  padding-block: 32px;
+}
+
+.site-footer .logo { font-size: 1.375rem; justify-self: start; }
+
+.footer-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+
+.footer-links a,
+.footer-mail { color: var(--muted); transition: color 0.2s; }
+.footer-links a:hover,
+.footer-mail:hover { color: var(--black); }
+
+.footer-mail { overflow-wrap: anywhere; }
+
+.footer-copy { color: var(--muted); }
+
+@media (min-width: 900px) {
+  .site-footer .container {
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    column-gap: 40px;
+  }
+  .footer-links { justify-content: center; }
 }
 
 /* --------------------------------------------------------------------------

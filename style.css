@@ -141,8 +141,72 @@ p { margin: 0; }
 .nav-links a { color: var(--muted); transition: color 0.2s; }
 .nav-links a:hover { color: var(--black); }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Menu mobile: ☰ accanto a "Parliamone", pannello nero a tutto schermo
+   -------------------------------------------------------------------------- */
+.menu-toggle {
+  position: relative;
+  z-index: 60;              /* resta sopra il pannello e diventa la X */
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--black);
+  cursor: pointer;
+}
+.menu-toggle .icon-close,
+.menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+.menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+.menu-toggle[aria-expanded="true"] { color: var(--white); }
+.menu-toggle[aria-expanded="true"]:focus-visible { outline-color: var(--white); }
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 96px var(--gutter) 48px;
+  background: var(--black);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.mobile-menu[hidden] { display: none; }
+
+.mobile-menu nav {
+  display: grid;
+  gap: 12px;
+  text-align: center;
+}
+
+.mobile-menu a {
+  display: block;
+  padding: 4px 12px;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 14vw, 4rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.mobile-menu a:focus-visible { outline-color: var(--white); }
+
+/* Blocca lo scroll della pagina mentre il menu è aperto */
+.menu-open { overflow: hidden; }
+
 @media (min-width: 768px) {
   .nav-links { display: flex; }
+  .menu-toggle,
+  .mobile-menu { display: none; }
 }
 
 /* --------------------------------------------------------------------------

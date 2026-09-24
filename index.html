@@ -63,9 +63,25 @@
       <a href="#contatti">Contatti</a>
     </nav>
 
-    <a class="btn btn--sm" href="https://wa.me/393347278991?text=Ciao!%20Ho%20visto%20il%20tuo%20sito%20e%20vorrei%20informazioni%20per%20una%20nuova%20attivit%C3%A0." data-whatsapp target="_blank" rel="noopener">Parliamone</a>
+    <div class="header-actions">
+      <a class="btn btn--sm" href="https://wa.me/393347278991?text=Ciao!%20Ho%20visto%20il%20tuo%20sito%20e%20vorrei%20informazioni%20per%20una%20nuova%20attivit%C3%A0." data-whatsapp target="_blank" rel="noopener">Parliamone</a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Apri menu">
+        <svg class="icon-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
   </div>
 </header>
+
+<!-- Menu mobile: pannello nero a tutto schermo, solo sotto i 768px -->
+<div class="mobile-menu" id="mobile-menu" hidden>
+  <nav aria-label="Menu">
+    <a href="#progetti">Progetti</a>
+    <a href="#come-lavoro">Come lavoro</a>
+    <a href="#contatti">Contatti</a>
+  </nav>
+</div>
 
 <main id="main">
 

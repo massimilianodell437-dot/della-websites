@@ -347,12 +347,19 @@ p { margin: 0; }
     margin: 0 36px -64px 0;
   }
 
-  .work-card--laptop .work-visual {
-    width: 540px;
-    margin: 0 -72px -56px 0;
-  }
+  /* Tra 900 e 1199px la card è stretta: testo sopra, laptop sotto */
+  .work-card--laptop { grid-template-columns: minmax(0, 1fr); }
+  .work-card--laptop .work-copy { align-self: start; padding-bottom: 0; }
 
-  .work-card--laptop .work-copy { max-width: 280px; }
+  .work-card--laptop .work-visual {
+    margin: 0 32px -48px 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  /* Laptop a destra, dentro la card: sborda solo in basso */
+  .work-card--laptop { grid-template-columns: 240px minmax(0, 1fr); }
+  .work-card--laptop .work-copy { align-self: end; padding-bottom: 36px; }
   .work-card--laptop h3 { padding-right: 0; }
 }
 
@@ -479,6 +486,93 @@ h2 .line-inner { white-space: normal; }
 @media (min-width: 900px) {
   .why-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .why-card { min-height: 340px; padding: 32px; }
+}
+
+/* --------------------------------------------------------------------------
+   Come lavoro: blocco nero, telefono al centro, quattro passi ai lati
+   -------------------------------------------------------------------------- */
+.how { padding-bottom: var(--section-gap); }
+
+.how-frame {
+  padding: 48px 24px;
+  border-radius: var(--r-frame);
+  background: var(--black);
+  color: var(--white);
+}
+
+/* Unico titolo centrato della pagina */
+.how-title { text-align: center; }
+
+.how-body {
+  display: grid;
+  gap: 48px;
+  margin-top: 40px;
+}
+
+.how-visual {
+  width: min(64%, 240px);
+  justify-self: center;
+}
+
+.how-steps {
+  display: grid;
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.how-steps li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: baseline;
+}
+
+.how-num {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  line-height: 0.9;
+  color: var(--muted-inv);
+}
+
+.how-steps h3 { font-size: 1.75rem; }
+
+.how-steps p {
+  grid-column: 2;
+  max-width: 34ch;
+  color: var(--muted-inv);
+  font-size: var(--fs-small);
+}
+
+@media (min-width: 900px) {
+  .how-frame { padding: 72px 56px; }
+
+  .how-body {
+    --how-phone: 260px;
+    margin-top: 56px;
+  }
+
+  /* Telefono e passi nella stessa cella: i passi a sinistra e a destra */
+  .how-visual,
+  .how-steps { grid-area: 1 / 1; }
+
+  .how-visual { width: var(--how-phone); }
+
+  .how-steps {
+    grid-template-columns: minmax(0, 1fr) var(--how-phone) minmax(0, 1fr);
+    grid-template-rows: repeat(2, auto);
+    column-gap: 56px;
+    row-gap: 72px;
+    align-content: center;
+  }
+
+  .how-steps li:nth-child(-n + 2) { grid-column: 1; }
+  .how-steps li:nth-child(n + 3)  { grid-column: 3; }
+  .how-steps li:nth-child(odd)    { grid-row: 1; }
+  .how-steps li:nth-child(even)   { grid-row: 2; }
 }
 
 /* --------------------------------------------------------------------------

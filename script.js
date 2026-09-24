@@ -110,7 +110,7 @@ if (!motionOK) {
         yPercent: inHero ? 8 : 4,
         ease: 'none',
         scrollTrigger: {
-          trigger: inHero || el.closest('.work-card'),
+          trigger: inHero || el.closest('.work-card, section'),
           start: inHero ? 'top top' : 'top bottom',
           end: 'bottom top',
           scrub: true,

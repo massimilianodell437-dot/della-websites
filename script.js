@@ -79,13 +79,14 @@ if (!motionOK) {
   // se si risale. Solo transform e opacity, tranne il testo dei contatori.
   const mm = gsap.matchMedia();
 
-  // Card portfolio: salgono con un leggero stagger
+  // Card portfolio: salgono con un leggero stagger. Finiscono al 70%
+  // dello schermo: se si vedono già al caricamento sono piene, non sbiadite.
   gsap.to('.work-card', {
     autoAlpha: 1,
     y: 0,
     ease: 'none',
     stagger: 0.15,
-    scrollTrigger: { trigger: '.work-grid', start: 'top 95%', end: 'top 55%', scrub: 0.6 },
+    scrollTrigger: { trigger: '.work-grid', start: 'top bottom', end: 'top 70%', scrub: 0.6 },
   });
 
   // Titoli di sezione: riga per riga seguendo lo scroll

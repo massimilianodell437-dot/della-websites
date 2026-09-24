@@ -111,6 +111,30 @@ p { margin: 0; }
 
 .on-dark .btn-round { background: var(--white); color: var(--black); }
 
+/* Area toccabile di almeno 44px in altezza, senza cambiare l'aspetto:
+   uno pseudo-elemento invisibile centrato sul link */
+.logo,
+.nav-links a,
+.btn--sm,
+.contact-mail,
+.footer-links a,
+.footer-mail { position: relative; }
+
+.logo::after,
+.nav-links a::after,
+.btn--sm::after,
+.contact-mail::after,
+.footer-links a::after,
+.footer-mail::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: max(100%, 44px);
+  transform: translateY(-50%);
+}
+
 /* --------------------------------------------------------------------------
    Header
    -------------------------------------------------------------------------- */
@@ -263,9 +287,16 @@ p { margin: 0; }
   border-radius: var(--r-frame);
   background: var(--mist);
   overflow: hidden;
+  container-type: inline-size;
 }
 
-.hero-title { font-size: var(--fs-hero); line-height: 0.96; }
+/* Le righe non vanno a capo: il font non supera mai la colonna.
+   "Te lo costruisco" è largo 6,58em, diviso 6,8 lascia un po' di margine. */
+.hero-title {
+  --hero-col: 100cqi;
+  font-size: min(var(--fs-hero), calc(var(--hero-col) / 6.8));
+  line-height: 0.96;
+}
 
 /* Ogni riga è una maschera: il testo sale dal basso all'ingresso */
 /* padding verticale: la maschera non taglia accenti (É) e virgole */
@@ -297,7 +328,8 @@ p { margin: 0; }
     padding: 56px 56px 0;
   }
 
-  .hero-title { grid-column: 1; grid-row: 1; }
+  /* colonna del titolo = contenuto del riquadro − 320px di testo − 48px di gap */
+  .hero-title { --hero-col: calc(100cqi - 368px); grid-column: 1; grid-row: 1; }
 
   .hero-intro {
     grid-column: 2;
@@ -505,7 +537,10 @@ h2 .line-inner { white-space: normal; }
 }
 .why-card.on-dark { background: var(--black); color: var(--white); }
 
+/* Nel codice la cifra viene dopo il titolo (lo screen reader legge prima
+   "Per costruirlo"), ma a schermo resta in alto */
 .why-figure {
+  order: -1;
   font-family: var(--font-display);
   font-size: clamp(4rem, 7vw, 6rem);
   line-height: 0.9;
@@ -680,7 +715,13 @@ h2 .line-inner { white-space: normal; }
   font-size: var(--fs-nav);
   font-weight: 500;
 }
-.form-row label span { color: var(--muted); font-weight: 400; }
+.form-row label .opt { color: var(--muted); font-weight: 400; }
+.form-row label .req { margin-left: 2px; }
+
+.form-note {
+  color: var(--muted);
+  font-size: var(--fs-nav);
+}
 
 .form-row input,
 .form-row select,
@@ -688,7 +729,7 @@ h2 .line-inner { white-space: normal; }
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--field-line);
   border-radius: 12px;
   background: var(--white);
   color: var(--black);
@@ -700,7 +741,8 @@ h2 .line-inner { white-space: normal; }
 
 .contact-form .btn { justify-self: start; margin-top: 6px; }
 
-@media (min-width: 900px) {
+/* Due colonne solo da 1024px: sotto, "Parliamone." non entrerebbe accanto al form */
+@media (min-width: 1024px) {
   .contact {
     grid-template-columns: minmax(0, 1fr) minmax(0, 560px);
     column-gap: 64px;
@@ -719,7 +761,7 @@ h2 .line-inner { white-space: normal; }
 
 .site-footer .container {
   display: grid;
-  gap: 16px;
+  gap: 24px;               /* le aree toccabili da 44px non si sovrappongono */
   padding-block: 32px;
 }
 

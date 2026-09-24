@@ -29,7 +29,15 @@ if (contactForm) {
     let message = `Ciao! Sono ${name}, ho un'attività (${biz}) ${where}.`;
     if (msg) message += ` ${msg}`;
 
-    window.open(buildWhatsappLink(message), '_blank', 'noopener');
+    // Senza 'noopener' window.open restituisce la finestra: così si vede
+    // se il browser l'ha bloccata, e in quel caso si apre WhatsApp qui.
+    const url = buildWhatsappLink(message);
+    const win = window.open(url, '_blank');
+    if (win) {
+      win.opener = null;
+    } else {
+      window.location.href = url;
+    }
   });
 }
 

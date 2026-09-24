@@ -8,7 +8,8 @@
   /* Colore */
   --white: #ffffff;
   --mist: #ededed;
-  --line: #d6d6d6;
+  --line: #d6d6d6;       /* solo divisori decorativi */
+  --field-line: #858585; /* bordi dei campi: 3.2:1 su --mist, 3.7:1 su --white */
   --muted: #5c5c5c;      /* 5.6:1 su --mist, 6.7:1 su --white */
   --black: #000000;
   --muted-inv: #a3a3a3;  /* 8.4:1 su --black */

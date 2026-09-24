@@ -11,14 +11,17 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Della Websites — Te lo costruisco gratis. Poi decidi tu.">
 <meta property="og:description" content="Realizzo siti per attività locali tra Torino e Benevento. La build è gratis, la gestione costa 35 € al mese.">
-<meta property="og:image" content="assets/og-image.jpg">
-<meta property="og:url" content="https://della-websites.vercel.app">
+<meta property="og:image" content="https://dellawebsites.it/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Te lo costruisco gratis. Poi decidi tu. dellawebsites.it">
+<meta property="og:url" content="https://dellawebsites.it/">
 
 <!-- Twitter/X card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Della Websites — Te lo costruisco gratis. Poi decidi tu.">
 <meta name="twitter:description" content="Realizzo siti per attività locali tra Torino e Benevento.">
-<meta name="twitter:image" content="assets/og-image.jpg">
+<meta name="twitter:image" content="https://dellawebsites.it/assets/og-image.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +29,7 @@
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.25/dist/lenis.css">
+<link rel="stylesheet" href="vendor/lenis.css">
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="style.css">
 
@@ -184,27 +187,27 @@
 
   <div class="why-grid" data-stagger>
     <article class="why-card">
-      <p class="why-figure">0 €</p>
       <div>
         <h3>Per costruirlo</h3>
         <p>Lo costruisco prima che tu paghi qualcosa. Lo vedi finito e decidi tu se metterlo online.</p>
       </div>
+      <p class="why-figure">0 €</p>
     </article>
 
     <article class="why-card on-dark">
-      <p class="why-figure">35 €<span>/mese</span></p>
       <div>
         <h3>Tutto incluso</h3>
         <p>Dominio, hosting, sicurezza e piccole modifiche. Mi scrivi su WhatsApp e ci penso io.</p>
       </div>
+      <p class="why-figure">35 €<span>/mese</span></p>
     </article>
 
     <article class="why-card">
-      <p class="why-figure">1</p>
       <div>
         <h3>Una persona sola</h3>
         <p>Niente centralino né account manager: parli sempre con me, dall'inizio alla fine.</p>
       </div>
+      <p class="why-figure">1</p>
     </article>
   </div>
 </section>
@@ -265,16 +268,17 @@
   </div>
 
   <form class="contact-form" id="contactForm">
+    <p class="form-note"><span aria-hidden="true">*</span> Campi obbligatori</p>
     <div class="form-row">
-      <label for="fname">Nome</label>
+      <label for="fname">Nome <span class="req" aria-hidden="true">*</span></label>
       <input type="text" id="fname" name="fname" autocomplete="given-name" placeholder="Il tuo nome" required>
     </div>
     <div class="form-row">
-      <label for="fbiz">Attività</label>
+      <label for="fbiz">Attività <span class="req" aria-hidden="true">*</span></label>
       <input type="text" id="fbiz" name="fbiz" placeholder="Es. parrucchiere, ristorante…" required>
     </div>
     <div class="form-row">
-      <label for="fcity">Città</label>
+      <label for="fcity">Città <span class="req" aria-hidden="true">*</span></label>
       <select id="fcity" name="fcity" required>
         <option value="" disabled selected>Seleziona</option>
         <option value="Torino">Torino</option>
@@ -283,7 +287,7 @@
       </select>
     </div>
     <div class="form-row">
-      <label for="fmsg">Messaggio <span>(facoltativo)</span></label>
+      <label for="fmsg">Messaggio <span class="opt">(facoltativo)</span></label>
       <textarea id="fmsg" name="fmsg" rows="3" placeholder="Raccontami in breve cosa ti serve"></textarea>
     </div>
     <button type="submit" class="btn">
@@ -316,9 +320,9 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.3.25/dist/lenis.min.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

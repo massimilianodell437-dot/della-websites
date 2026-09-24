@@ -107,7 +107,6 @@ p { margin: 0; }
   flex: none;
 }
 .btn-round svg { transition: transform 0.3s var(--ease-out); }
-.btn-round:hover svg { transform: translate(2px, -2px); }
 
 .on-dark .btn-round { background: var(--white); color: var(--black); }
 
@@ -321,42 +320,49 @@ p { margin: 0; }
 
 .hero-cta { justify-self: start; }
 
+/* Sotto i 1024px l'aside non esiste: ordine titolo, testo, bottone, laptop */
+.hero-aside { display: contents; }
+.hero-intro { order: 1; }
+.hero-cta { order: 2; }
+
 .hero-visual {
-  position: relative;
+  order: 3;
   margin-top: 16px;
   margin-right: -20%;
   margin-bottom: -18%;
+  perspective: 1400px;
 }
 
 @media (min-width: 1024px) {
-  /* Tre righe: titolo + testo, bottone, laptop. Il laptop sta sempre
-     sotto il titolo e sborda solo in basso (il riquadro lo taglia) */
+  /* Due colonne: titolo e bottone a sinistra, testo e laptop a destra.
+     Il laptop non può toccare il titolo perché sta in un'altra colonna;
+     il titolo si rimpicciolisce per stare nella sua (--hero-col). */
   .hero-frame {
-    grid-template-columns: minmax(0, 1fr) 320px;
+    --hero-aside: clamp(320px, 48cqi, 660px);
+    grid-template-columns: minmax(0, 1fr) clamp(320px, 48%, 660px);
+    grid-template-rows: auto 1fr;
     column-gap: 48px;
     row-gap: 0;
     padding: 56px 56px 0;
   }
 
-  /* colonna del titolo = contenuto del riquadro − 320px di testo − 48px di gap */
-  .hero-title { --hero-col: calc(100cqi - 368px); grid-column: 1; grid-row: 1; }
+  .hero-title { --hero-col: calc(100cqi - var(--hero-aside) - 48px); grid-column: 1; grid-row: 1; }
 
-  .hero-intro {
+  .hero-cta { grid-column: 1; grid-row: 2; align-self: start; margin-top: 40px; }
+
+  .hero-aside {
     grid-column: 2;
-    grid-row: 1;
-    align-self: start;
-    padding-top: 10px;
-    font-size: var(--fs-body);
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
   }
 
-  .hero-cta { grid-column: 1; grid-row: 2; margin-top: 40px; }
+  .hero-intro { padding-top: 10px; font-size: var(--fs-body); }
 
+  /* Subito sotto il testo; sborda solo dal bordo inferiore del riquadro */
   .hero-visual {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    justify-self: end;
-    width: min(64%, 880px);
-    margin: 48px 0 -12%;
+    margin: 0 0 -12%;
   }
 }
 
@@ -393,6 +399,20 @@ p { margin: 0; }
   font-size: var(--fs-small);
 }
 .work-card.on-dark p { color: var(--muted-inv); }
+
+/* Tipo di attività e cosa ho fatto, sotto il nome */
+.work-card .work-meta,
+.work-card.on-dark .work-meta {
+  margin-top: 12px;
+  color: inherit;
+  font-size: var(--fs-nav);
+  font-weight: 500;
+}
+/* Va a capo solo al punto, mai dentro "Sito con catalogo" */
+.work-meta span { white-space: nowrap; }
+/* Su mobile il bottone ↗ sta accanto al testo: stesso spazio del titolo */
+.work-card .work-meta { padding-right: 64px; }
+@media (min-width: 900px) { .work-card .work-meta { padding-right: 0; } }
 
 .work-card .btn-round {
   position: absolute;
@@ -450,11 +470,35 @@ p { margin: 0; }
   }
 }
 
+/* Tra 900 e 1199px la card del telefono è stretta: telefono più piccolo,
+   così non copre il nome e la riga sotto */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .work-card--phone .work-visual {
+    width: 150px;
+    margin: 0 24px -48px 0;
+  }
+}
+@media (min-width: 900px) and (max-width: 999px) {
+  .work-card--phone .work-visual { width: 124px; }
+  .work-meta span { white-space: normal; }
+}
+
 @media (min-width: 1200px) {
   /* Laptop a destra, dentro la card: sborda solo in basso */
   .work-card--laptop { grid-template-columns: 240px minmax(0, 1fr); }
   .work-card--laptop .work-copy { align-self: end; padding-bottom: 36px; }
   .work-card--laptop h3 { padding-right: 0; }
+}
+
+/* Hover: il mockup sale di poco e la freccia si sposta verso ↗.
+   La card la muove GSAP all'ingresso, quindi qui si muovono solo i figli.
+   Niente movimento con prefers-reduced-motion o senza mouse. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .work-visual { transition: transform 0.5s var(--ease-out); }
+  .work-card:hover .work-visual { transform: translateY(-8px); }
+
+  .btn-round:hover svg,
+  .work-card:hover .btn-round svg { transform: translate(3px, -3px); }
 }
 
 /* --------------------------------------------------------------------------

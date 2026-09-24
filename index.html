@@ -100,20 +100,23 @@
       <span class="line"><span class="line-inner">Poi decidi tu.</span></span>
     </h1>
 
-    <p class="hero-intro" data-hero-fade>
-      Realizzo siti per attività locali tra Torino e Benevento. Il tuo lo costruisco prima che tu paghi qualcosa: se ti piace va online, altrimenti finisce lì.
-    </p>
+    <!-- Da 1024px testo e laptop stanno nella colonna destra; sotto, display: contents -->
+    <div class="hero-aside">
+      <p class="hero-intro" data-hero-fade>
+        Realizzo siti per attività locali tra Torino e Benevento. Il tuo lo costruisco prima che tu paghi qualcosa: se ti piace va online, altrimenti finisce lì.
+      </p>
+
+      <div class="hero-visual" data-hero-fade>
+        <div class="device-laptop" data-hero-laptop>
+          <img src="assets/progetti/desir-arredamenti.webp" alt="Home page del sito Désir Arredamenti, realizzato da me" width="1440" height="900" fetchpriority="high">
+        </div>
+      </div>
+    </div>
 
     <a class="btn hero-cta" href="https://wa.me/393347278991?text=Ciao!%20Ho%20visto%20il%20tuo%20sito%20e%20vorrei%20informazioni%20per%20una%20nuova%20attivit%C3%A0." data-whatsapp data-hero-fade target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.763.462 3.483 1.34 4.997L2 22l5.13-1.325a9.958 9.958 0 0 0 4.874 1.242h.004c5.514 0 9.997-4.483 9.997-9.997 0-2.671-1.04-5.182-2.929-7.071A9.937 9.937 0 0 0 12.004 2.003zm0 18.19h-.003a8.196 8.196 0 0 1-4.175-1.144l-.3-.178-3.043.787.812-2.968-.195-.305a8.184 8.184 0 0 1-1.256-4.376c0-4.523 3.68-8.203 8.204-8.203a8.15 8.15 0 0 1 5.8 2.406 8.15 8.15 0 0 1 2.398 5.802c-.001 4.524-3.681 8.203-8.242 8.203z"/></svg>
       Parliamone
     </a>
-
-    <div class="hero-visual" data-hero-fade>
-      <div class="device-laptop" data-parallax>
-        <img src="assets/progetti/desir-arredamenti.webp" alt="Home page del sito Désir Arredamenti, realizzato da me" width="1440" height="900" fetchpriority="high">
-      </div>
-    </div>
   </div>
 </section>
 
@@ -126,6 +129,7 @@
     <article class="work-card work-card--phone on-dark">
       <div class="work-copy">
         <h3>Désir Arredamenti</h3>
+        <p class="work-meta"><span>Arredamenti su misura ·</span> <span>Sito con catalogo</span></p>
         <p>Catalogo con area riservata: il titolare aggiorna i prodotti da solo.</p>
       </div>
       <a class="btn-round" href="https://desir-arredamenti.vercel.app" target="_blank" rel="noopener" aria-label="Apri il sito di Désir Arredamenti (nuova scheda)">
@@ -141,6 +145,7 @@
     <article class="work-card work-card--laptop">
       <div class="work-copy">
         <h3>San Bartolomeo Casa Albergo</h3>
+        <p class="work-meta"><span>Casa albergo per anziani ·</span> <span>Sito vetrina</span></p>
         <p>Un sito one-page che rassicura le famiglie prima ancora della prima telefonata.</p>
       </div>
       <a class="btn-round" href="https://www.sanbartolomeocasaalbergo.it" target="_blank" rel="noopener" aria-label="Apri il sito di San Bartolomeo Casa Albergo (nuova scheda)">
@@ -194,7 +199,7 @@
         <h3>Per costruirlo</h3>
         <p>Lo costruisco prima che tu paghi qualcosa. Lo vedi finito e decidi tu se metterlo online.</p>
       </div>
-      <p class="why-figure">0 €</p>
+      <p class="why-figure"><span class="why-num" data-count="0">0</span> €</p>
     </article>
 
     <article class="why-card on-dark">
@@ -202,7 +207,7 @@
         <h3>Tutto incluso</h3>
         <p>Dominio, hosting, sicurezza e piccole modifiche. Mi scrivi su WhatsApp e ci penso io.</p>
       </div>
-      <p class="why-figure">35 €<span>/mese</span></p>
+      <p class="why-figure"><span class="why-num" data-count="35">35</span> €<span>/mese</span></p>
     </article>
 
     <article class="why-card">
@@ -210,7 +215,7 @@
         <h3>Una persona sola</h3>
         <p>Niente centralino né account manager: parli sempre con me, dall'inizio alla fine.</p>
       </div>
-      <p class="why-figure">1</p>
+      <p class="why-figure"><span class="why-num" data-count="1">1</span></p>
     </article>
   </div>
 </section>
@@ -224,12 +229,12 @@
 
     <div class="how-body">
       <div class="how-visual">
-        <div class="device-phone" data-parallax>
+        <div class="device-phone">
           <img src="assets/progetti/san-bartolomeo-mobile.webp" alt="Il sito di San Bartolomeo Casa Albergo visto da telefono" width="780" height="1688" loading="lazy">
         </div>
       </div>
 
-      <ol class="how-steps" data-stagger>
+      <ol class="how-steps">
         <li>
           <span class="how-num" aria-hidden="true">1</span>
           <h3>Chiacchierata</h3>

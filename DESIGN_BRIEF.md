@@ -106,7 +106,8 @@ Frase in alto a destra (bozza): *"Realizzo siti per attività locali tra Torino 
 ## File
 
 - Riscritti: `tokens.css`, `style.css`, `index.html`. `script.js` viene sfoltito tenendo form, WhatsApp, Lenis e menu mobile.
-- Non toccati: `vetrina.html`/`.css`/`.js` (pagina separata con la vecchia identità: dimmi se va rifatta, eliminata o lasciata com'è) e la cartella `three/` (non è in git: oggi `index.html` la importa, quindi su Vercel probabilmente va in 404. Il problema sparisce insieme all'hero 3D).
+- `vetrina.html`/`.css`/`.js` e `LICENSE-vetrina.md` (pagina separata con la vecchia identità): eliminati.
+- Non toccata: la cartella `three/` (non è in git: oggi `index.html` la importa, quindi su Vercel probabilmente va in 404. Il problema sparisce insieme all'hero 3D).
 
 ## Verifica
 

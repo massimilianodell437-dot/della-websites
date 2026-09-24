@@ -156,6 +156,16 @@ p { margin: 0; }
   text-transform: uppercase;
 }
 
+/* "DELLA" in tracciati: alto 1em come la riga di testo di prima,
+   quindi segue il font-size del logo (header 26px, footer 22px) */
+.logo-word {
+  display: block;
+  flex: none;
+  height: 1em;
+  width: auto;
+  aspect-ratio: 218.51 / 100;
+}
+
 .nav-links {
   display: none;
   gap: 32px;

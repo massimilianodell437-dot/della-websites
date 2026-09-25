@@ -101,7 +101,7 @@ Frase in alto a destra (bozza): *"Realizzo siti per attività locali tra Torino 
   2. Désir mobile, 390×844 @2x → `desir-arredamenti-mobile.webp` (780×1688)
   3. San Bartolomeo mobile, 390×844 @2x → `san-bartolomeo-mobile.webp` (780×1688)
 - I mockup (laptop e telefono) sono fatti in CSS puro: cornice nera, notch minimale. Niente PNG di device.
-- Logo: per ora uso `lockup-ink.svg` e `logo-mark-*.svg`. Il testo del lockup usa Bricolage Grotesque, che non viene caricata: va ridisegnato in un secondo momento.
+- Logo: SVG inline in `index.html` (segno + "DELLA" in Anton convertito in tracciati), niente file esterni.
 
 ## File
 

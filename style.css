@@ -1,7 +1,7 @@
 /* ==========================================================================
    Della Websites — rebrand-mono
    Token in tokens.css. Ordine: base, bottoni, header, mockup, hero,
-   portfolio, problema, perché funziona, come lavoro, contatti, footer.
+   portfolio, problema, perché funziona, come lavoro, FAQ, contatti, footer.
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -714,6 +714,52 @@ h2 .line-inner { white-space: normal; }
   .how-steps li:nth-child(n + 3)  { grid-column: 3; }
   .how-steps li:nth-child(odd)    { grid-row: 1; }
   .how-steps li:nth-child(even)   { grid-row: 2; }
+}
+
+/* --------------------------------------------------------------------------
+   FAQ: accordion con <details>, funziona anche senza JavaScript
+   -------------------------------------------------------------------------- */
+.faq {
+  display: grid;
+  gap: 40px;
+  padding-bottom: var(--section-gap);
+}
+
+.faq-list { border-top: 1px solid var(--line); }
+
+.faq-item { border-bottom: 1px solid var(--line); }
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 64px;
+  padding: 18px 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.35;
+  list-style: none;
+  cursor: pointer;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-icon { flex: none; transition: transform 0.3s var(--ease-out); }
+.faq-item[open] .faq-icon { transform: rotate(45deg); }
+
+.faq-item p {
+  max-width: 60ch;
+  padding-bottom: 22px;
+  color: var(--muted);
+}
+
+@media (min-width: 1024px) {
+  .faq {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 760px);
+    column-gap: 64px;
+    align-items: start;
+  }
+  .faq-item summary { font-size: 1.1875rem; }
 }
 
 /* --------------------------------------------------------------------------

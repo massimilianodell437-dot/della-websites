@@ -3,6 +3,16 @@
 Rebranding di dellawebsites.it. Riferimento: shot Dribbble "Shopify Earbuds Selling Website" (principi, non copia).
 Il "prodotto" sono i siti dei clienti: dove il riferimento mostra le cuffie, qui ci sono i mockup di Désir e San Bartolomeo.
 
+## Modello e regole sui testi (aggiornato il 21 ottobre 2026)
+
+Queste regole valgono su tutto il resto del brief.
+
+- **Modello**: bozza gratuita e senza impegno, poi preventivo su misura con gestione mensile. Gratuita è solo la bozza: non si scrive mai che il sito o la gestione sono gratis.
+- **Frase da usare**: "La bozza è gratuita e senza impegno." (testo dell'hero, passo 2 di "Come lavoriamo", FAQ).
+- **Prezzi**: sul sito non vanno mai indicati prezzi o cifre in euro, né nei testi né in meta description, OG, alt o FAQ. Al loro posto: "Preventivo su misura".
+- **Voce**: il sito parla al plurale. Siamo un piccolo team di Torino che lavora insieme sui progetti, con Massimiliano Della Pia come referente principale. Non si inventano numeri (anni, clienti, siti fatti) né nomi di altre persone.
+- **Contatti**: telefono 334 727 8991, WhatsApp, email, LinkedIn, zona Torino, più il pulsante WhatsApp flottante. Nessun Instagram.
+
 ## Token
 
 **Colore**: monocromatico, nessun accento.
@@ -13,7 +23,7 @@ Il "prodotto" sono i siti dei clienti: dove il riferimento mostra le cuffie, qui
 | `--mist` | `#EDEDED` | card chiare, contenitore hero |
 | `--line` | `#D6D6D6` | bordi input, divisori (pochi) |
 | `--muted` | `#5C5C5C` | testo secondario (5,6:1 su `#EDEDED`, 6,7:1 su bianco) |
-| `--black` | `#000000` | titoli, card nere, bottoni, blocco "Come lavoro" |
+| `--black` | `#000000` | titoli, card nere, bottoni, blocco "Come lavoriamo" |
 | `--muted-inv` | `#A3A3A3` | testo secondario su nero (8,4:1) |
 
 L'unico colore nella pagina è quello degli screenshot dei clienti. Il colore lo portano i loro siti, non il mio.
@@ -34,9 +44,9 @@ L'unico colore nella pagina è quello degli screenshot dei clienti. Il colore lo
 ## Layout home
 
 ```
-┌ logo ─────────── Progetti  Come lavoro  Contatti ─────── (Parliamone) ┐
+┌ logo ───────── Progetti  Come lavoriamo  Contatti ────── (Parliamone) ┐
 ╭──────────────────────────────── #EDEDED, r32 ───────────────────────────────╮
-│ TITOLO ANTON                                   frase breve in prima persona │
+│ TITOLO ANTON                                   frase breve, al plurale      │
 │ SU DUE/TRE                                                                  │
 │ RIGHE                    ┌──────────── laptop Désir ───────────┐            │
 │ (Parliamone)             │                                     │  ┌──────┐  │
@@ -48,40 +58,39 @@ L'unico colore nella pagina è quello degli screenshot dei clienti. Il colore lo
 ╰────────────────────────────╯ ╰─────────────────────────────────────────────────╯
   IL PROBLEMA, IN BREVE: una frase Anton + 3 righe (lento / vecchio / assente)
   PERCHÉ FUNZIONA           ╭ grigia ╮ ╭ nera ╮ ╭ grigia ╮
-                            │ 0 €    │ │ 35 € │ │ 1     │   ← cifre vere del modello,
-                            ╰────────╯ ╰──────╯ ╰───────╯     non statistiche
-╭──────────────────────────── nero pieno: COME LAVORO ────────────────────────╮
+                            │ PRIMA  │ │TUTTO │ │ UN    │   ← una parola in Anton,
+                            │ LO VEDI│ │INCL. │ │ TEAM  │     mai prezzi o cifre
+                            ╰────────╯ ╰──────╯ ╰───────╯
+╭────────────────────────── nero pieno: COME LAVORIAMO ───────────────────────╮
 │  1 Chiacchierata          ┌─ telefono ─┐          3 Guardi e decidi         │
-│  2 Costruisco gratis      │ San Bart.  │          4 Online + gestione       │
+│  2 Prepariamo la bozza    │ San Bart.  │          4 Online + gestione       │
 ╰─────────────────────────────────────────────────────────────────────────────╯
   PARLIAMONE. + form → WhatsApp           nota firmata
-  footer: logo · 3 link · email · © 2026
+  footer: logo · 4 link · © 2026 / telefono · WhatsApp · email · LinkedIn · Torino
 ```
 
-- Allineamento a sinistra ovunque. Unica eccezione il titolo di "Come lavoro", centrato sopra il mockup.
+- Allineamento a sinistra ovunque. Unica eccezione il titolo di "Come lavoriamo", centrato sopra il mockup.
 - Container da 1280px, gutter di 16px su mobile e 32px su desktop. Tra una sezione e l'altra 120px su desktop e 72px su mobile.
-- A 375px tutto diventa una colonna. Nell'hero il titolo va sopra, il mockup di Désir va sotto a tutta larghezza e il telefono si sovrappone al laptop in basso a destra. Le card portfolio vanno una sotto l'altra. In "Come lavoro" il telefono va in cima e i passi sotto, in sequenza.
+- A 375px tutto diventa una colonna. Nell'hero il titolo va sopra, il mockup di Désir va sotto a tutta larghezza e il telefono si sovrappone al laptop in basso a destra. Le card portfolio vanno una sotto l'altra. In "Come lavoriamo" il telefono va in cima e i passi sotto, in sequenza.
 - **Il pezzo audace è uno solo**: il mockup di Désir che esce dal bordo del contenitore grigio dell'hero, come la testa nel riferimento. Tutto il resto resta quieto.
-- La numerazione 1–4 c'è solo in "Come lavoro", perché lì i passi sono davvero una sequenza.
+- La numerazione 1–4 c'è solo in "Come lavoriamo", perché lì i passi sono davvero una sequenza.
 
-## Headline hero (scegline una)
+## Headline hero
 
-1. **TE LO COSTRUISCO GRATIS. POI DECIDI TU.**: dice subito il modello, cioè la cosa che mi distingue. *(la mia consigliata)*
-2. **SITI CHE FANNO SQUILLARE IL TELEFONO.**: parla del risultato che interessa a un'attività locale.
-3. **IL TUO SITO, FATTO DA UNA PERSONA SOLA.**: punta sul rapporto diretto con me.
+**PRIMA LO VEDI FINITO. POI DECIDI TU.**: dice subito il modello, senza nominare prezzi.
 
-Frase in alto a destra (bozza): *"Realizzo siti per attività locali tra Torino e Benevento. Il tuo lo costruisco prima che tu paghi qualcosa: se ti piace va online, altrimenti finisce lì."*
+Frase in alto a destra: *"Siamo un piccolo team di Torino e realizziamo siti per attività locali tra Torino e Benevento. Prepariamo una bozza del tuo sito prima di parlare di costi: se ti piace va online, altrimenti finisce lì. La bozza è gratuita e senza impegno."*
 
 ## Contenuti
 
 - **Portfolio**: San Bartolomeo (card nera): *"Un sito one-page che rassicura le famiglie prima ancora della prima telefonata."* ↗ `https://www.sanbartolomeocasaalbergo.it`. Désir (card grigia): *"Catalogo con area riservata: il titolare aggiorna i prodotti da solo."* ↗ `https://desir-arredamenti.vercel.app`.
-- **Perché funziona**: 0 € per la build ("Lo costruisco prima che tu paghi qualcosa"), 35 €/mese tutto incluso (dominio, hosting, sicurezza, piccole modifiche), 1 persona di riferimento ("Mi scrivi su WhatsApp, rispondo io").
+- **Perché funziona**: tre card con una parola in grande, nessuna cifra. "Prima lo vedi, poi decidi" (bozza prima di parlare di costi), "Tutto incluso" (dominio, hosting, sicurezza, piccole modifiche), "Un team dedicato" (un unico referente sempre raggiungibile).
 - **Il problema**: da circa 2.400px passa a un blocco solo, al massimo 500px su desktop. Niente pin e niente scroll orizzontale.
 - **Statistiche 53% / 88% / 9/10**: le elimino tutte. Il 53% viene da Google/SOASTA (2016): ha una fonte, ma ha 10 anni e riguarda i siti mobile in generale. L'88% e il 9/10 non hanno una fonte primaria verificabile.
-- **"Solo se ti piace"**: il badge sparisce e il concetto finisce nel testo della card da 0 €.
-- **Testi**: tutto in prima persona singolare. Da correggere anche meta description e OG ("Progettiamo" → "Progetto") e il placeholder del form ("Raccontaci" → "Raccontami").
-- **WhatsApp**: in `script.js` e nei 3 link inline, "Ho visto il **vostro** sito" diventa "Ho visto il **tuo** sito".
-- **Da tenere invariati**: il form che invia su WhatsApp (logica attuale), la nota firmata "Massimiliano, 19 anni · Torino & Benevento" e l'email.
+- **"Solo se ti piace"**: il badge sparisce e il concetto finisce nel testo della card "Prima lo vedi, poi decidi".
+- **Testi**: tutto in prima persona plurale ("costruiamo", "ci pensiamo noi", "parli con noi"), compresi meta description, OG, alt e placeholder del form ("Raccontaci").
+- **WhatsApp**: in `script.js` e nei link inline il messaggio precompilato è "Ho visto il **vostro** sito".
+- **Da tenere invariati**: il form che invia su WhatsApp (logica attuale) e l'email.
 
 ## Animazioni (GSAP + Lenis)
 

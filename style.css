@@ -115,16 +115,12 @@ p { margin: 0; }
 .logo,
 .nav-links a,
 .btn--sm,
-.contact-mail,
-.footer-links a,
-.footer-mail { position: relative; }
+.footer-links a { position: relative; }
 
 .logo::after,
 .nav-links a::after,
 .btn--sm::after,
-.contact-mail::after,
-.footer-links a::after,
-.footer-mail::after {
+.footer-links a::after {
   content: '';
   position: absolute;
   left: 0;
@@ -571,7 +567,7 @@ h2 .line-inner { white-space: normal; }
 }
 
 /* --------------------------------------------------------------------------
-   Perché funziona: tre card con le cifre vere del modello
+   Perché funziona: tre card, ognuna con una parola in grande
    -------------------------------------------------------------------------- */
 .why { padding-bottom: var(--section-gap); }
 
@@ -591,22 +587,15 @@ h2 .line-inner { white-space: normal; }
 }
 .why-card.on-dark { background: var(--black); color: var(--white); }
 
-/* Nel codice la cifra viene dopo il titolo (lo screen reader legge prima
-   "Per costruirlo"), ma a schermo resta in alto */
+/* Parola in grande, stesso stile degli H2. Nel codice viene dopo il testo
+   ed è aria-hidden (ripete il titolo), ma a schermo resta in alto */
 .why-figure {
   order: -1;
   font-family: var(--font-display);
-  font-size: clamp(4rem, 7vw, 6rem);
-  line-height: 0.9;
+  font-size: var(--fs-h2);
+  line-height: 0.96;
+  text-transform: uppercase;
 }
-.why-figure span {
-  margin-left: 6px;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--muted);
-}
-.on-dark .why-figure span { color: var(--muted-inv); }
 
 .why-card h3 {
   font-family: var(--font-body);
@@ -763,7 +752,7 @@ h2 .line-inner { white-space: normal; }
 }
 
 /* --------------------------------------------------------------------------
-   Contatti: titolo, testo ed email a sinistra, form su WhatsApp a destra
+   Contatti: titolo, testo e canali a sinistra, form su WhatsApp a destra
    -------------------------------------------------------------------------- */
 .contact {
   display: grid;
@@ -777,16 +766,31 @@ h2 .line-inner { white-space: normal; }
   color: var(--muted);
 }
 
-.contact-mail {
-  display: inline-block;
-  margin-top: 16px;
+/* Telefono, email, LinkedIn e zona: icona a sinistra, link sottolineato.
+   Ogni riga è alta 44px, quindi l'area toccabile c'è già */
+.contact-list {
+  display: grid;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
   font-weight: 500;
+}
+.contact-list svg { flex: none; color: var(--muted); }
+.contact-list a {
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 1px;
   overflow-wrap: anywhere;
 }
-.contact-mail:hover { text-decoration-thickness: 2px; }
+.contact-list a:hover { text-decoration-thickness: 2px; }
+
+.contact-wa { margin-top: 24px; }
 
 .contact-form {
   display: grid;
@@ -828,6 +832,20 @@ h2 .line-inner { white-space: normal; }
 
 .contact-form .btn { justify-self: start; margin-top: 6px; }
 
+.form-privacy {
+  color: var(--muted);
+  font-size: var(--fs-nav);
+}
+.form-privacy a,
+.legal a {
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.form-privacy a:hover,
+.legal a:hover { text-decoration-thickness: 2px; }
+
 /* Due colonne solo da 1024px: sotto, "Parliamone." non entrerebbe accanto al form */
 @media (min-width: 1024px) {
   .contact {
@@ -857,21 +875,114 @@ h2 .line-inner { white-space: normal; }
 .footer-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 
 .footer-links a,
-.footer-mail { color: var(--muted); transition: color 0.2s; }
+.footer-contacts a { color: var(--muted); transition: color 0.2s; }
 .footer-links a:hover,
-.footer-mail:hover { color: var(--black); }
+.footer-contacts a:hover { color: var(--black); }
 
-.footer-mail { overflow-wrap: anywhere; }
+/* Canali di contatto con icona: righe da 44px, quindi niente ::after */
+.footer-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.footer-contacts :is(a, span) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+.footer-contacts span { color: var(--muted); }
+.footer-contacts svg { flex: none; }
 
 .footer-copy { color: var(--muted); }
 
 @media (min-width: 900px) {
+  /* Riga 1: logo, sezioni, copyright. Riga 2: i contatti */
   .site-footer .container {
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     column-gap: 40px;
+    row-gap: 8px;
   }
   .footer-links { justify-content: center; }
+  .footer-copy { grid-column: 3; grid-row: 1; }
+  .footer-contacts { grid-column: 1 / -1; }
+}
+
+/* --------------------------------------------------------------------------
+   WhatsApp flottante: cerchio nero in basso a destra, come i bottoni
+   -------------------------------------------------------------------------- */
+.wa-float {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 40;              /* sotto il menu mobile (50) */
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--white);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18), 0 6px 20px rgb(0 0 0 / 0.18);
+  transition: background-color 0.25s var(--ease-out), transform 0.3s var(--ease-out);
+}
+.wa-float:hover { background: #2e2e2e; transform: translateY(-2px); }
+.wa-float:focus-visible { outline-offset: 4px; }
+.menu-open .wa-float { visibility: hidden; }
+
+/* Il footer lascia spazio al bottone, così non copre il copyright */
+.site-footer { padding-bottom: 72px; }
+
+@media (min-width: 768px) {
+  .wa-float { right: 24px; bottom: 24px; }
+  .site-footer { padding-bottom: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Pagine secondarie: privacy e 404
+   -------------------------------------------------------------------------- */
+.page { padding-bottom: var(--section-gap); }
+
+.page-head {
+  display: grid;
+  gap: 20px;
+  padding: 40px 20px;
+  border-radius: var(--r-frame);
+  background: var(--mist);
+}
+.page-head h1 { font-size: var(--fs-h2); line-height: 0.96; }
+.page-head p { max-width: 44ch; color: var(--muted); }
+.page-head .btn { justify-self: start; margin-top: 8px; }
+
+.page-code {
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 24vw, 14rem);
+  line-height: 0.85;
+}
+
+.legal {
+  max-width: 68ch;
+  padding-top: 48px;
+}
+.legal h2 {
+  margin-top: 40px;
+  font-size: var(--fs-card);
+}
+.legal h2:first-child { margin-top: 0; }
+.legal p,
+.legal ul { margin-top: 12px; color: var(--muted); }
+.legal ul { padding-left: 1.2em; }
+.legal li + li { margin-top: 6px; }
+.legal strong { color: var(--black); font-weight: 500; }
+.legal-updated { margin-top: 48px; font-size: var(--fs-nav); }
+
+@media (min-width: 768px) {
+  .page-head { padding: 56px; }
 }
 
 /* --------------------------------------------------------------------------

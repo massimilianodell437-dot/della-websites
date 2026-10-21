@@ -2,7 +2,7 @@
    WhatsApp
    --------------------------------------------------------------- */
 const WHATSAPP_NUMBER = '393347278991';
-const WHATSAPP_DEFAULT_MESSAGE = 'Ciao! Ho visto il tuo sito e vorrei informazioni per una nuova attività.';
+const WHATSAPP_DEFAULT_MESSAGE = 'Ciao! Ho visto il vostro sito e vorrei informazioni per una nuova attività.';
 
 function buildWhatsappLink(message) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -76,7 +76,7 @@ if (!motionOK) {
     .to('[data-hero-fade]', { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.08 }, '-=0.75');
 
   // Tutto quello che segue è legato allo scroll (scrub): torna indietro
-  // se si risale. Solo transform e opacity, tranne il testo dei contatori.
+  // se si risale. Solo transform e opacity.
   const mm = gsap.matchMedia();
 
   // Card portfolio: salgono con un leggero stagger. Finiscono al 70%
@@ -111,19 +111,6 @@ if (!motionOK) {
       ease: 'none',
       stagger: 0.2,
       scrollTrigger: { trigger: group, start: 'top 92%', end: 'top 55%', scrub: 0.6 },
-    });
-  });
-
-  // "Perché funziona": le cifre contano da 0 mentre la card entra
-  gsap.utils.toArray('.why-num').forEach((num) => {
-    const target = Number(num.dataset.count);
-    const counter = { v: 0 };
-    num.textContent = '0';
-    gsap.to(counter, {
-      v: target,
-      ease: 'none',
-      onUpdate: () => { num.textContent = Math.round(counter.v); },
-      scrollTrigger: { trigger: num.closest('.why-card'), start: 'top 90%', end: 'top 50%', scrub: 0.4 },
     });
   });
 
@@ -212,7 +199,7 @@ if (menuToggle && mobileMenu) {
   const menuLinks = mobileMenu.querySelectorAll('a');
   // Tutto ciò che non è il menu o la X: reso inerte mentre il menu è aperto
   const behind = [
-    ...document.querySelectorAll('.skip-link, .site-header .logo, .site-header .btn, main, footer'),
+    ...document.querySelectorAll('.skip-link, .site-header .logo, .site-header .btn, main, footer, .wa-float'),
   ];
   let menuTl = null;
 
